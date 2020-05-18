@@ -1,0 +1,26 @@
+.nav-bar-button {
+  position: absolute;
+  right: 16px;
+}
+
+.sidebar-icon {
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  margin: 0 8px;
+}
+
+::ng-deep .mat-drawer-inner-container {
+  overflow-x: hidden !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.active-link {
+  color: #69f0ae !important;
+  font-weight: bold;
+}
+
+.sub-nav-link {
+  margin-left: 32px;
+}

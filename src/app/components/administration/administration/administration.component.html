@@ -1,0 +1,47 @@
+<mat-tab-group #tabGroup (selectedTabChange)="onTabChange($event.index)">
+  <mat-tab *ngIf="authenticationService.hasPermission(2)">
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px">settings</mat-icon>
+      <label>Allgemein</label>
+    </ng-template>
+    <mat-card>
+      <app-general-settings></app-general-settings>
+    </mat-card>
+  </mat-tab>
+  <mat-tab *ngIf="authenticationService.hasPermission(5)">
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px">movie</mat-icon>
+      <label>Filme</label>
+    </ng-template>
+    <mat-card>
+      <app-movie-administration></app-movie-administration>
+    </mat-card>
+  </mat-tab>
+  <mat-tab *ngIf="authenticationService.hasPermission(3)">
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px" svgIcon="theater"></mat-icon>
+      <label>Kinosäle</label>
+    </ng-template>
+    <mat-card>
+      <app-room-administration></app-room-administration>
+    </mat-card>
+  </mat-tab>
+  <mat-tab *ngIf="authenticationService.hasPermission(5)">
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px">schedule</mat-icon>
+      <label>Zeitplan</label>
+    </ng-template>
+    <mat-card>
+      <app-schedule></app-schedule>
+    </mat-card>
+  </mat-tab>
+  <mat-tab *ngIf="authenticationService.hasPermission(4)">
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px">euro</mat-icon>
+      <label>Finanzen</label>
+    </ng-template>
+    <mat-card>
+      <app-finance-overview></app-finance-overview>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>

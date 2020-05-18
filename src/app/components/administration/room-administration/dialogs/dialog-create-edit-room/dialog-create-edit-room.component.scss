@@ -1,0 +1,19 @@
+.seat-selected {
+  border: 1px solid white;
+  margin: 0 -1px;
+}
+
+.seat-type-option {
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.seat-type-option-image {
+  width: 24px;
+  margin-right: 8px;
+}
+
+.seat-type-option-no-image {
+  margin-left: 32px;
+}

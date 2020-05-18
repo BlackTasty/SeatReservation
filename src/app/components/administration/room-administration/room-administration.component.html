@@ -1,0 +1,51 @@
+<span class="flex-container">
+  <span style="flex: 1"></span>
+  <button mat-raised-button color="primary" style="margin: 8px 0" (click)="showCreateEditDialog(null, false)">
+    <mat-icon class="icon-margin">add</mat-icon>
+    Kinosaal hinzufügen
+  </button>
+</span>
+<mat-table matSort [dataSource]="rooms">
+  <!-- 'isOpen', 'name', 'seatCount', 'actions' -->
+  <ng-container matColumnDef="isOpen">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let room">
+      <mat-slide-toggle [(ngModel)]="room.isOpen" (change)="toggleRoomOpen($event, room.id)">
+        {{room.isOpen ? 'Offen' : 'Geschlossen'}}
+      </mat-slide-toggle>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Name</mat-header-cell>
+    <mat-cell *matCellDef="let room">
+      {{room.name}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="seatCount">
+    <mat-header-cell mat-sort-header *matHeaderCellDef># Sitzplätze</mat-header-cell>
+    <mat-cell *matCellDef="let room">
+      <label>
+        {{getSeatCountForRoom(room)}}
+      </label>
+      </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>Aktionen</mat-header-cell>
+    <mat-cell *matCellDef="let room">
+      <button mat-icon-button matTooltip="Bearbeiten" color="accent" class="actions-margin"
+        (click)="showCreateEditDialog(room, true)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Entfernen" color="warn" class="actions-margin"
+        (click)="onRemoveRoom(room)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
+<span style="display: flex; align-items: center;">
+  <span class="spacer"></span>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</span>

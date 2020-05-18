@@ -1,0 +1,18 @@
+<mat-card style="max-width: 380px; margin: auto; top: 180px" class="card-backdrop">
+  <h2>Anmelden</h2>
+  <mat-divider></mat-divider>
+  <form [formGroup]="loginForm" style="display: flex; flex-direction: column; padding-top: 8px;">
+    <mat-form-field color="accent">
+      <input matInput placeholder="Benutzername" formControlName="username" required>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput placeholder="Password" formControlName="password" type="password" required>
+    </mat-form-field>
+
+    <button [disabled]="loginForm.invalid" mat-raised-button color="primary" (click)="onSubmit()">Login</button>
+  </form>
+</mat-card>
+<div *ngIf="loading"
+  style="width: 100%; height: 100%; display: flex; position: absolute; top: 0">
+  <mat-progress-spinner color="primary" mode="indeterminate" style="margin: auto"></mat-progress-spinner>
+</div>

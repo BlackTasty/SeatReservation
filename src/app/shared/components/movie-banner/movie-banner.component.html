@@ -1,0 +1,22 @@
+<div>
+  <img [src]="image">
+  <span class="bar top-bar" *ngIf="!!headline">
+    <span class="spacer"></span>
+    <label class="header">
+      {{headline}}
+    </label>
+    <span class="spacer"></span>
+  </span>
+  <span class="bar bottom-bar">
+    <span class="spacer"></span>
+    <label class="sub-header">
+      {{title}}
+    </label>
+    <span class="spacer"></span>
+    <a mat-raised-button color="primary" style="margin-right: 8px; width: 152px;"
+      [routerLink]="bookingUrl">
+      <label style="margin-right: 4px;">Tickets buchen</label>
+      <mat-icon>confirmation_number</mat-icon>
+    </a>
+  </span>
+</div>

@@ -1,21 +1,77 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div style="height: 100vh;">
+  <mat-sidenav-container class="stretch-height">
+    <mat-sidenav #sidenav [@openCloseSidenav]="isOpen ? 'open' : 'closed'" mode="side" style="width: 300px;" opened>
+      <mat-toolbar color="accent">
+        <mat-icon style="margin-right: 8px" *ngIf="isOpen">event_seat</mat-icon>
+        <span class="spacer" *ngIf="isOpen"></span>
+        <span *ngIf="isOpen">Sitzplatzreservierung</span>
+        <span class="spacer" *ngIf="isOpen"></span>
+        <button mat-icon-button (click)="isOpen = !isOpen">
+          <mat-icon>{{isOpen ? 'keyboard_arrow_left' : 'menu'}}</mat-icon>
+        </button>
+      </mat-toolbar>
+      <mat-nav-list>
+        <a mat-list-item routerLink="/home" [matTooltip]="isOpen ? '' : 'Startseite'"
+          [ngClass]="{'active-link': currentRoute == '/home'}">
+          <mat-icon class="sidebar-icon">home</mat-icon>
+          <label *ngIf="isOpen">Startseite</label>
+        </a>
+        <a mat-list-item routerLink="/movies" [matTooltip]="isOpen ? '' : 'Filme'"
+          [ngClass]="{'active-link': currentRoute == '/movies'}">
+          <mat-icon class="sidebar-icon">theaters</mat-icon>
+          <label *ngIf="isOpen">Filme</label>
+        </a>
+        <a mat-list-item routerLink="/admin" [matTooltip]="isOpen ? '' : 'Administration'"
+          *ngIf="!authenticationService.isNormalUser()"
+          [ngClass]="{'active-link': currentRoute == '/admin'}">
+          <mat-icon class="sidebar-icon">person</mat-icon>
+          <label *ngIf="isOpen">Administration</label>
+        </a>
+        <a mat-list-item routerLink="/admin/movies" [matTooltip]="isOpen ? '' : 'Film Verwaltung'"
+          *ngIf="authenticationService.hasPermission(5)"
+          [ngClass]="{'active-link': currentRoute == '/admin/movies'}">
+          <mat-icon class="sidebar-icon" [class.sub-nav-link]="isOpen">person</mat-icon>
+          <label *ngIf="isOpen">Film Verwaltung</label>
+        </a>
+      </mat-nav-list>
+      <mat-nav-list style="margin-top: auto">
+        <a mat-list-item routerLink="/account" [matTooltip]="isOpen ? '' : 'Account'"
+          *ngIf="authenticationService.hasPermission(6)"
+          [ngClass]="{'active-link': currentRoute == '/account'}">
+          <mat-icon class="sidebar-icon">person</mat-icon>
+          <label *ngIf="isOpen">Account</label>
+        </a>
+        <a mat-list-item [matTooltip]="isOpen ? '' : 'Abmelden'" (click)="authenticationService.logout()"
+          *ngIf="authenticationService.loggedIn">
+          <mat-icon class="sidebar-icon" svgIcon="logout"></mat-icon>
+          <label *ngIf="isOpen">Abmelden</label>
+        </a>
+        <a mat-list-item routerLink="/login" [matTooltip]="isOpen ? '' : 'Anmelden'"
+          *ngIf="!authenticationService.loggedIn"
+          [ngClass]="{'active-link': currentRoute == '/login'}">
+          <mat-icon class="sidebar-icon" svgIcon="login"></mat-icon>
+          <label *ngIf="isOpen">Anmelden</label>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content [@openCloseSidenavContent]="isOpen ? 'open' : 'closed'">
+      <mat-toolbar role="toolbar" color="primary" style="position: fixed; z-index: 2;">
+        <span>{{titleService.toolbarTitle}}</span>
+        <span *ngIf="titleService.hasBreadcrumbs()"
+          style="display: flex; align-items: center; margin-left: 8px; color: rgba(255,255,255,0.8);">
+          <mat-icon>keyboard_arrow_right</mat-icon>
+          <label *ngFor="let breadcrumb of titleService.breadcrumbs" style="font-size: 14px;">
+            {{ breadcrumb.name }}
+          </label>
+        </span>
+        <span class="spacer"></span>
+        <!--<button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>-->
+      </mat-toolbar>
+      <div style="margin: 16px; height: calc(100% - 96px); top: 64px; position: relative;">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
-<router-outlet></router-outlet>

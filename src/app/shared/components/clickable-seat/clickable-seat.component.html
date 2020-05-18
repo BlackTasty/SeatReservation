@@ -1,0 +1,5 @@
+<span>
+  <img style="width: 32px;" *ngIf="!!seatPosition.seatType.seatImage && seatPosition.seatType.seatImage !== ''"
+    [src]="domSanitizer.bypassSecurityTrustUrl(seatPosition.seatType.seatImage)"
+    (click)="seatClicked.emit(seatPosition)">
+</span>

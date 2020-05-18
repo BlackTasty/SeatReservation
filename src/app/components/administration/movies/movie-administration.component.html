@@ -1,0 +1,63 @@
+<span class="flex-container">
+  <span style="flex: 1"></span>
+  <button mat-raised-button color="primary" style="margin: 8px 0" (click)="showCreateEditDialog(null, false)">
+    <mat-icon class="icon-margin">add</mat-icon>
+    Film hinzufügen
+  </button>
+</span>
+<mat-table matSort [dataSource]="movies">
+  <ng-container matColumnDef="logo">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let movie">
+      <img [src]="domSanitizer.bypassSecurityTrustUrl(movie.logo)" style="height: 40px; width: 40px;"
+        [ngClass]="movie.isArchived ? 'archived' : ''">
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="title">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Titel</mat-header-cell>
+    <mat-cell *matCellDef="let movie" [ngClass]="movie.isArchived ? 'text-archived' : ''">
+      {{movie.isArchived ? movie.title + ' (archiviert)' : movie.title}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="length">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Länge (hh:mm)</mat-header-cell>
+    <mat-cell *matCellDef="let movie">
+      <label [ngClass]="movie.isArchived ? 'text-archived' : ''">
+        {{movie.movieLength | minuteParser}}
+      </label>
+      </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="genre">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Genres</mat-header-cell>
+    <mat-cell *matCellDef="let movie">
+      <label [ngClass]="movie.isArchived ? 'text-archived' : ''">
+        {{genreListToString(movie)}}
+      </label>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="earnings">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Einnahmen</mat-header-cell>
+    <mat-cell *matCellDef="let movie" [ngClass]="movie.isArchived ? 'text-archived' : ''">
+      0</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>Aktionen</mat-header-cell>
+    <mat-cell *matCellDef="let movie">
+      <button mat-icon-button matTooltip="Bearbeiten" color="accent" class="actions-margin"
+        (click)="showCreateEditDialog(movie, true)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Archivieren" color="warn" class="actions-margin"
+        (click)="onArchiveMovie(movie)">
+        <mat-icon>archive</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
+<span style="display: flex; align-items: center;">
+  <mat-slide-toggle (change)="loadMovies()" [(ngModel)]="showArchived">Archivierte Filme anzeigen</mat-slide-toggle>
+  <span class="spacer"></span>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</span>

@@ -1,0 +1,89 @@
+<div>
+  <h2 mat-dialog-title>{{isEdit ? 'Kinosaal bearbeiten' : 'Kinosaal erstellen'}}</h2>
+
+  <mat-dialog-content>
+    <mat-accordion>
+      <mat-expansion-panel expanded="true" style="margin-top: 8px">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Generell
+          </mat-panel-title>
+          <mat-panel-description>
+            Namen, Zeitplan und Öffnungsstatus konfigurieren
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div>
+          <mat-form-field>
+            <input matInput placeholder="Name" [(ngModel)]="room.name" required>
+          </mat-form-field>
+          <mat-slide-toggle [(ngModel)]="room.isOpen">
+            {{room.isOpen ? 'Offen' : 'Geschlossen'}}
+          </mat-slide-toggle>
+          <mat-form-field *ngIf="isLoaded">
+            <mat-select [disabled]="schedules.length == 0" placeholder="Zeitplan">
+              <mat-option *ngFor="let schedule of schedules" [value]="schedule.id">
+                Zeitplan #{{schedule.id}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel style="margin-bottom: 8px">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Raumplan
+          </mat-panel-title>
+          <mat-panel-description>
+            Sitzanordnung ändern
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div>
+          <span style="display: flex; align-items: center;">
+            <span class="spacer"></span>
+            <mat-form-field>
+              <input matInput type="number" placeholder="# Reihen" [(ngModel)]="roomPlan.rows"
+                (change)="onRoomPlanChange()">
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput type="number" placeholder="# Spalten" [(ngModel)]="roomPlan.columns"
+                (change)="onRoomPlanChange()">
+            </mat-form-field>
+          </span>
+
+          <div *ngFor="let seatRow of seatRows" style="height: 32px; display: flex; margin: 6px 0; justify-content: center;">
+            <span *ngFor="let seat of seatRow.seats" style="width: 32px;"
+              [ngClass]="isSeatSelected(seat) ? 'seat-selected' : ''">
+              <app-clickable-seat [seatPosition]="seat" (seatClicked)="onSeatClicked($event)"></app-clickable-seat>
+            </span>
+          </div>
+
+          <span style="display: flex; margin: 8px 0;">
+            <span class="spacer"></span>
+            <mat-form-field *ngIf="isLoaded">
+              <mat-select placeholder="Sitzplatztyp" [disabled]="!(!!selectedSeatPosition)"
+                [(ngModel)]="selectedSeatTypeIndex" (valueChange)="onSelectedSeatTypeChanged($event)">
+                <mat-option *ngFor="let seatType of seatTypes" [value]="seatType.id">
+                  <span class="seat-type-option">
+                    <img *ngIf="!!seatType.seatImage && seatType.seatImage !== ''"
+                      [src]="domSanitizer.bypassSecurityTrustUrl(seatType.seatImage)"
+                      class="seat-type-option-image">
+                      <label [ngClass]="!(!!seatType.seatImage) || seatType.seatImage === '' ? 'seat-type-option-no-image' : ''">
+                        {{seatType.name}}
+                      </label>
+                  </span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </span>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions-container">
+    <div class="dialog-actions-content">
+      <button mat-raised-button color="warn" (click)="onAbortClicked()">Abbrechen</button>
+      <button mat-raised-button color="accent" (click)="onConfirmClicked()">Bestätigen</button>
+    </div>
+  </mat-dialog-actions>
+</div>

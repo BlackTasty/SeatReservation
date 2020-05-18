@@ -1,0 +1,91 @@
+<div>
+  <h2 mat-dialog-title>{{isEdit ? 'Film bearbeiten' : 'Film erstellen'}}</h2>
+
+  <mat-dialog-content>
+    <mat-accordion>
+      <mat-expansion-panel expanded="true" style="margin-top: 8px">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Generell
+          </mat-panel-title>
+          <mat-panel-description>
+            Daten wie Titel, Filmlänge, Beschreibung, etc. setzen
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div>
+          <mat-form-field>
+            <input matInput placeholder="Titel" [(ngModel)]="movie.title" required>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Beschreibung" [(ngModel)]="movie.description" required>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="number" placeholder="Länge (in Minuten)" [(ngModel)]="movie.movieLength" required>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="datetime-local" placeholder="Veröffentlichungsdatum" [(ngModel)]="movie.releaseDate" required>
+          </mat-form-field>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Grafiken
+          </mat-panel-title>
+          <mat-panel-description>
+            Poster, Banner, Logo und Trailer setzen
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div>
+          <mat-form-field>
+            <input matInput placeholder="Poster (Hochformat)" [(ngModel)]="movie.poster" required>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Banner (Querformat)" [(ngModel)]="movie.banner" required>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Logo" [(ngModel)]="movie.logo" required>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Trailer" [(ngModel)]="movie.trailer" required>
+          </mat-form-field>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel style="margin-bottom: 8px">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Genres
+          </mat-panel-title>
+          <mat-panel-description>
+            Auswahl der Genres für den Film
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div style="max-height: 300px; overflow-y: auto;">
+          <mat-table matSort [dataSource]="genres">
+            <ng-container matColumnDef="checked">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let genre">
+                <mat-checkbox [(ngModel)]="genre.checked"></mat-checkbox>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef>Genre</mat-header-cell>
+              <mat-cell *matCellDef="let genre">
+                {{genre.genre.name}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+          </mat-table>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions-container">
+    <div class="dialog-actions-content">
+      <button mat-raised-button color="warn" (click)="onAbortClicked()">Abbrechen</button>
+      <button mat-raised-button color="accent" (click)="onConfirmClicked()">Bestätigen</button>
+    </div>
+  </mat-dialog-actions>
+</div>
