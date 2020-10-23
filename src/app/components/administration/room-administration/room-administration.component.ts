@@ -4,6 +4,7 @@ import { RoomService } from './../../../core/services/room.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Room } from 'src/app/shared/model/room';
 import { MatDialogConfig, MatPaginator, MatSort, MatDialog, MatTableDataSource, MatSlideToggleChange } from '@angular/material';
+import { DialogScheduleMovieComponent } from '../schedule/dialogs/dialog-schedule-movie/dialog-schedule-movie.component';
 
 @Component({
   selector: 'app-room-administration',
@@ -50,6 +51,25 @@ export class RoomAdministrationComponent implements OnInit {
     });
 
     return seatCount;
+  }
+
+  public onScheduleMovie(room: Room) {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      room
+    };
+
+    const dialogRef = this.dialog.open(DialogScheduleMovieComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (!!result) {
+
+        }
+      }
+    );
   }
 
   public showCreateEditDialog(room: Room, isEdit: boolean) {

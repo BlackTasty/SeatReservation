@@ -34,6 +34,8 @@ export class AppComponent {
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/logout.svg'));
     this.matIconRegistry.addSvgIcon('theater',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/theater.svg'));
+    this.matIconRegistry.addSvgIcon('calendar_clock',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/calendar-clock.svg'));
 
     authenticationService.checkLoggedIn();
   }

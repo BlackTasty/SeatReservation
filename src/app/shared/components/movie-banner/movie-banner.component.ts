@@ -13,7 +13,7 @@ export class MovieBannerComponent implements OnInit {
   public title: string;
 
   @Input()
-  public bookingUrl: string;
+  public movieId: number;
 
   @Input()
   public headline: string;

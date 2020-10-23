@@ -23,6 +23,13 @@ export class MovieService {
     }));
   }
 
+  public getFeaturedMovies(): Observable<Movie[]> {
+    return this.httpClient.get(this.hostName + '/getfeaturedmovies')
+    .pipe(map((result: Movie[]) => {
+      return result;
+    }));
+  }
+
   public searchMoviesByTitle(title: string): Observable<Movie> {
     return this.httpClient.get(this.hostName + '/searchmoviesbytitle?title=' + title)
     .pipe(map((result: Movie) => {

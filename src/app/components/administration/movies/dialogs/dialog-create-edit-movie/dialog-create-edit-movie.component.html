@@ -13,18 +13,25 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div>
-          <mat-form-field>
-            <input matInput placeholder="Titel" [(ngModel)]="movie.title" required>
+          <span style="display: flex;">
+            <mat-form-field style="flex: 1;">
+              <input matInput placeholder="Titel" [(ngModel)]="movie.title" required>
+            </mat-form-field>
+            <mat-form-field style="margin: 0 8px; width: 110px;">
+              <input matInput type="number" placeholder="Länge (in Minuten)" [(ngModel)]="movie.movieLength" required>
+            </mat-form-field>
+            <mat-form-field color="accent" style="width: 150px;">
+              <mat-label>Veröffentlichungsdatum</mat-label>
+              <input matInput [matDatepicker]="picker" [formControl]="releaseDate">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </span>
+          <mat-form-field class="stretch-width">
+            <textarea matInput placeholder="Beschreibung" [(ngModel)]="movie.description" required>
+            </textarea>
           </mat-form-field>
-          <mat-form-field>
-            <input matInput placeholder="Beschreibung" [(ngModel)]="movie.description" required>
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput type="number" placeholder="Länge (in Minuten)" [(ngModel)]="movie.movieLength" required>
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput type="datetime-local" placeholder="Veröffentlichungsdatum" [(ngModel)]="movie.releaseDate" required>
-          </mat-form-field>
+          <mat-slide-toggle [(ngModel)]="movie.isFeatured">Auf Startseite zeigen</mat-slide-toggle>
         </div>
       </mat-expansion-panel>
       <mat-expansion-panel>
@@ -37,16 +44,16 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div>
-          <mat-form-field>
+          <mat-form-field class="stretch-width">
             <input matInput placeholder="Poster (Hochformat)" [(ngModel)]="movie.poster" required>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field class="stretch-width">
             <input matInput placeholder="Banner (Querformat)" [(ngModel)]="movie.banner" required>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field class="stretch-width">
             <input matInput placeholder="Logo" [(ngModel)]="movie.logo" required>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field class="stretch-width">
             <input matInput placeholder="Trailer" [(ngModel)]="movie.trailer" required>
           </mat-form-field>
         </div>

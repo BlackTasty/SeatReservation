@@ -13,7 +13,8 @@ export class Movie {
               public releaseDate: Date,
               public scheduleSlots: ScheduleSlot[],
               public isArchived: boolean,
-              public genres: Genre[]) {
+              public genres: Genre[],
+              public isFeatured: boolean) {
 
   }
 }

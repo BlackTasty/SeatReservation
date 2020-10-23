@@ -1,1 +1,158 @@
-<div echarts [options]="option">
+<div>
+  <span style="display: flex; align-items: baseline">
+    <button mat-raised-button color="primary" (click)="onScheduleMovie()">
+      <mat-icon class="icon-margin" svgIcon="calendar_clock"></mat-icon>
+      Film planen
+    </button>
+    <span class="spacer"></span>
+    <mat-form-field color="accent">
+      <mat-label>Zeitplan-Tag auswählen</mat-label>
+      <input matInput [matDatepicker]="picker" [formControl]="scheduleDate" (dateChange)="refreshChart()">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-datepicker #datePicker></mat-datepicker>
+  </span>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Anstehende/Laufende Filme
+      </mat-panel-title>
+      <mat-panel-description>
+        <div style="display: flex; align-items: center; font-size: 14px;">
+          <mat-icon style="margin-right: 8px;">schedule</mat-icon> Anstehend: {{pendingMovies.data.length}}
+          <mat-icon style="margin-left: 32px; margin-right: 8px;">ondemand_video</mat-icon> Laufend: {{runningMovies.data.length}}
+        </div>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon style="margin: 0 8px">schedule</mat-icon>
+          <label>Anstehend</label>
+        </ng-template>
+        <mat-table matSort [dataSource]="pendingMovies">
+          <!-- 'isOpen', 'name', 'seatCount', 'actions' -->
+          <ng-container matColumnDef="room">
+            <mat-header-cell *matHeaderCellDef>Raum</mat-header-cell>
+            <mat-cell *matCellDef="let scheduleSlot">
+              {{getRoomForScheduleSlot(scheduleSlot).name}}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="title">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>Filmtitel</mat-header-cell>
+            <mat-cell *matCellDef="let scheduleSlot">
+              {{scheduleSlot.movie.title}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="remainingTime">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>Zeit bis Start</mat-header-cell>
+            <mat-cell *matCellDef="let scheduleSlot">
+              <label *ngIf="getRemainingTime(scheduleSlot, true) > 1">
+                {{getRemainingTime(scheduleSlot, true)}} Minuten
+              </label>
+              <label *ngIf="getRemainingTime(scheduleSlot, true) == 1">
+                1 Minute
+              </label>
+              <label *ngIf="getRemainingTime(scheduleSlot, true) < 1">
+                Weniger als eine Minute
+              </label>
+              </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="openSeats">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>Freie Sitzplätze</mat-header-cell>
+            <mat-cell *matCellDef="let scheduleSlot">
+              <label>
+                Yes
+              </label>
+              </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedPendingColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedPendingColumns"></mat-row>
+        </mat-table>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon style="margin: 0 8px">ondemand_video</mat-icon>
+          <label>Laufend</label>
+        </ng-template>
+        <mat-table matSort [dataSource]="runningMovies">
+          <!-- 'isOpen', 'name', 'seatCount', 'actions' -->
+          <ng-container matColumnDef="room">
+            <mat-header-cell *matHeaderCellDef>Raum</mat-header-cell>
+            <mat-cell *matCellDef="let scheduleSlot">
+              {{getRoomForScheduleSlot(scheduleSlot).name}}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="title">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>Filmtitel</mat-header-cell>
+            <mat-cell *matCellDef="let scheduleSlot">
+              {{scheduleSlot.movie.title}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="remainingTime">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>Verbleibende Spielzeit</mat-header-cell>
+            <mat-cell *matCellDef="let scheduleSlot">
+              <label>
+                {{getRemainingTime(scheduleSlot, false) | minuteParser: '{h}h {m}m'}}
+              </label>
+              </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedRunningColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedRunningColumns"></mat-row>
+        </mat-table>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-expansion-panel>
+  <!--<div echarts [options]="option" [merge]="updateOptions">-->
+  <div id="chartdiv" style="width: 100%; height: 500px;" #chartElement></div>
+  <mat-divider></mat-divider>
+  <mat-card>
+    <mat-card-title>
+      Slot Details
+    </mat-card-title>
+    <mat-card-content>
+      <div style="display: flex; height: 160px;">
+        <div style="position: relative; width: 33%;">
+          <img *ngIf="!!selectedScheduleSlotMovie && !!selectedScheduleSlotMovie.banner"
+            [src]="domSanitizer.bypassSecurityTrustUrl(selectedScheduleSlotMovie?.banner)"
+            class="faded-image background-image">
+          <div style="position: absolute; margin: -8px 8px 8px;">
+            <h2>Film</h2>
+            <div style="font-size: 16px; display: flex; flex-direction: column;">
+              <span>
+                <label style="font-weight: bold;">Titel:</label> {{selectedScheduleSlotMovie?.title}}<br>
+              </span>
+              <span style="margin: 8px 0">
+                <label style="font-weight: bold;">Start:</label> {{selectedScheduleSlot?.start | date: 'HH:mm'}}<br>
+              </span>
+              <span>
+                <label style="font-weight: bold;">Ende:</label> {{selectedScheduleSlot?.end | date: 'HH:mm'}}
+              </span>
+            </div>
+          </div>
+        </div>
+        <mat-divider [vertical]="true"></mat-divider>
+        <div style="margin: -8px 8px 8px; width: 33%;">
+          <h2>Raum</h2>
+          <div style="font-size: 16px; display: flex; flex-direction: column;">
+            <span>
+            <label style="font-weight: bold;">Name:</label> {{selectedScheduleSlotRoom?.name}}<br>
+            </span>
+            <span style="margin: 8px 0">
+            <label style="font-weight: bold;">Sitzplätze:</label> {{getSeatCountForRoom(selectedScheduleSlotRoom)}}<br>
+            </span>
+            <span>
+            <label style="font-weight: bold;">Reservierungen:</label> 0
+            </span>
+          </div>
+        </div>
+        <mat-divider [vertical]="true"></mat-divider>
+        <div style="margin: -8px 8px 8px; width: 33%;">
+          <h2>Umsatz</h2>
+          <app-movie-revenue-chart></app-movie-revenue-chart>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

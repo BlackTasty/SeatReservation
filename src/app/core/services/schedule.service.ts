@@ -24,6 +24,13 @@ export class ScheduleService {
     }));
   }
 
+  public generateSchedule(writeToDatabase: boolean): Observable<number> {
+    return this.httpClient.get(this.hostName + '/generateSchedule?writeToDatabase=' + writeToDatabase)
+    .pipe(map((result: number) => {
+      return result;
+    }));
+  }
+
   public scheduleMovie(roomScheduleSlot: RoomScheduleSlot): Observable<boolean> {
     return this.httpClient.post(this.hostName + '/schedulemovie', roomScheduleSlot)
     .pipe(map((result: boolean) => {

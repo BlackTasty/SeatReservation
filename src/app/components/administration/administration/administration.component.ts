@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TitleService } from 'src/app/core/services/title.service';
@@ -12,7 +13,7 @@ export class AdministrationComponent implements OnInit {
   @ViewChild(MatTabGroup) matTab: MatTabGroup;
 
   constructor(public authenticationService: AuthenticationService,
-              public titleService: TitleService) {
+              public titleService: TitleService, private activatedRoute: ActivatedRoute) {
     titleService.setToolbarTitle('Administration', true);
     authenticationService.checkLoggedIn();
   }
@@ -23,6 +24,7 @@ export class AdministrationComponent implements OnInit {
     } else {
       this.onTabChange(0);
     }
+
   }
 
   public onTabChange(intex: number) {

@@ -9,12 +9,12 @@
   </span>
   <span class="bar bottom-bar">
     <span class="spacer"></span>
-    <label class="sub-header">
+    <label class="sub-header" style="word-wrap: break-word; max-width: calc(100% - 168px);">
       {{title}}
     </label>
     <span class="spacer"></span>
-    <a mat-raised-button color="primary" style="margin-right: 8px; width: 152px;"
-      [routerLink]="bookingUrl">
+    <a mat-raised-button color="primary" style="margin: 0 8px; width: 152px;"
+      [routerLink]="'/movie/schedule'" [queryParams]="{id: movieId}">
       <label style="margin-right: 4px;">Tickets buchen</label>
       <mat-icon>confirmation_number</mat-icon>
     </a>

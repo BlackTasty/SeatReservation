@@ -1,0 +1,43 @@
+<div>
+  <h2 mat-dialog-title>Film zu Zeitplan hinzufügen</h2>
+
+  <mat-dialog-content>
+    <div style="display: flex; flex-direction: column;">
+      <mat-form-field>
+        <mat-select [(value)]="selectedMovieId" placeholder="Film">
+          <mat-option *ngFor="let movie of movies" [value]="movie.id">{{movie.title}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select [(value)]="selectedRoomId" placeholder="Raum" (selectionChange)="onRoomChanged()">
+          <mat-option *ngFor="let room of rooms" [value]="room.id">{{room.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span style="display: flex;">
+        <mat-form-field color="accent" style="width: 150px; margin-right: 8px;">
+          <mat-label>Tag der Ausstrahlung</mat-label>
+          <input matInput [matDatepicker]="picker" [formControl]="date" (dateChange)="onDateTimeChanged()">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field placeholder="Filmstart" style="width: 120px;" color="accent">
+          <input matInput type="time" [(ngModel)]="startTime" (change)="onDateTimeChanged()">
+          <label matSuffix style="margin-left: 4px;"> - {{getEndTime().format('HH:mm')}}</label>
+        </mat-form-field>
+      </span>
+      <label style="color: red;" *ngIf="isOverlapError">
+        Ungültiger Zeitraum!<br/>Ein Film wird bereits zu dieser Zeit im Raum abgespielt.
+      </label>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions-container">
+    <div class="dialog-actions-content">
+      <button mat-raised-button color="warn" (click)="onAbortClicked()">Abbrechen</button>
+      <button mat-raised-button color="accent" (click)="onConfirmClicked()"
+        [disabled]="!(!!selectedRoomId) || !(!!selectedMovieId)">
+        Bestätigen
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

@@ -17,3 +17,11 @@
 .seat-type-option-no-image {
   margin-left: 32px;
 }
+
+.seat-configuration {
+  display: flex;
+  margin: 8px -24px -24px;
+  padding: 8px 24px 16px;
+  align-items: center;
+  background-color: rgba(192,192,192, 0.1);
+}

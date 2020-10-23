@@ -5,6 +5,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Movie } from 'src/app/shared/model/movie';
 import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
 import { CheckableGenre } from './model/checkable-genre';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-create-edit-movie',
@@ -16,6 +17,7 @@ export class DialogCreateEditMovieComponent implements OnInit {
   public isEdit: boolean;
   public genres: MatTableDataSource<CheckableGenre>;
   public displayedColumns: string[] = [ 'checked', 'name' ];
+  public releaseDate = new FormControl(new Date());
 
   constructor(private dialogRef: MatDialogRef<DialogCreateEditMovieComponent>,
               private movieService: MovieService,
@@ -25,7 +27,8 @@ export class DialogCreateEditMovieComponent implements OnInit {
     if (!!data) {
       this.isEdit = data.isEdit;
 
-      this.movie = this.isEdit ? data.movie : new Movie(0, '', null, null, null, null, '', 0, new Date(), null, false, null);
+      this.movie = this.isEdit ? data.movie : new Movie(0, '', null, null, null, null, '', 0, new Date(), null, false, null, false);
+      this.releaseDate.setValue(this.movie.releaseDate);
     }
   }
 
@@ -51,6 +54,7 @@ export class DialogCreateEditMovieComponent implements OnInit {
     });
 
     this.movie.genres = genres;
+    this.movie.releaseDate = this.releaseDate.value;
     this.dialogRef.close(this.movie);
   }
 

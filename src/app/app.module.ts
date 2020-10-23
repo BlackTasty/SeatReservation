@@ -8,22 +8,26 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HomeComponent } from './components/home/home.component';
-import { MoviesComponent } from './components/movies/movies.component';
 import { AccountComponent } from './components/account/account.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { BasicAuthInterceptor } from './core/authentication/basic-auth.interceptor';
 import { ErrorInterceptor } from './core/authentication/error.interceptor';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import { MovieBannerComponent } from './shared/components/movie-banner/movie-banner.component';
 import { MovieCardComponent } from './shared/components/movie-card/movie-card.component';
 import { LoginComponent } from './components/login/login.component';
+
+import localeDeAt from '@angular/common/locales/de-AT';
+import { MovieScheduleComponent } from './components/movies/movie-details/movie-schedule/movie-schedule.component';
+import { MoviesComponent } from './components/movies/movies.component';
+import { SearchResultsComponent } from './components/movies/search-results/search-results.component';
+import { MovieDetailsComponent } from './components/movies/movie-details/movie-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    MoviesComponent,
     AccountComponent,
     SettingsComponent,
     PageNotFoundComponent,
@@ -48,4 +52,8 @@ import { LoginComponent } from './components/login/login.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    registerLocaleData(localeDeAt);
+  }
+}

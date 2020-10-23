@@ -9,6 +9,8 @@
       <input matInput placeholder="Password" formControlName="password" type="password" required>
     </mat-form-field>
 
+    <mat-checkbox formControlName="stayLoggedIn">Angemeldet bleiben</mat-checkbox>
+
     <button [disabled]="loginForm.invalid" mat-raised-button color="primary" (click)="onSubmit()">Login</button>
   </form>
 </mat-card>

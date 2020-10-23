@@ -1,3 +1,4 @@
+import { DialogScheduleMovieComponent } from './../schedule/dialogs/dialog-schedule-movie/dialog-schedule-movie.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DialogCreateEditMovieComponent } from './dialogs/dialog-create-edit-movie/dialog-create-edit-movie.component';
 import { MovieService } from './../../../core/services/movie.service';
@@ -50,6 +51,25 @@ export class MovieAdministrationComponent implements OnInit {
     });
 
     return genreString;
+  }
+
+  public onScheduleMovie(movie: Movie) {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      movie
+    };
+
+    const dialogRef = this.dialog.open(DialogScheduleMovieComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (!!result) {
+
+        }
+      }
+    );
   }
 
   public showCreateEditDialog(movie: Movie, isEdit: boolean) {

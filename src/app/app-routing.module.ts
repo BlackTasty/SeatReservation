@@ -1,3 +1,5 @@
+import { MovieScheduleComponent } from './components/movies/movie-details/movie-schedule/movie-schedule.component';
+import { MovieDetailsComponent } from './components/movies/movie-details/movie-details.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './core/authentication/authGuard';
 import { AccountComponent } from './components/account/account.component';
@@ -7,10 +9,11 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { HomeComponent } from './components/home/home.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { SearchResultsComponent } from './components/movies/search-results/search-results.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'movies', component: MoviesComponent },
+  { path: 'movies', loadChildren: './components/movies/movies.module#MoviesModule'},
   { path: 'admin', loadChildren: './components/administration/administration.module#AdministrationModule', canActivate: [AuthGuard] },
   { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },

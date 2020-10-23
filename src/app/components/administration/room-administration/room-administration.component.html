@@ -1,8 +1,12 @@
 <span class="flex-container">
-  <span style="flex: 1"></span>
   <button mat-raised-button color="primary" style="margin: 8px 0" (click)="showCreateEditDialog(null, false)">
     <mat-icon class="icon-margin">add</mat-icon>
     Kinosaal hinzufügen
+  </button>
+  <span style="flex: 1"></span>
+  <button mat-raised-button color="primary" style="margin: 8px 0" (click)="loadRooms()">
+    <mat-icon class="icon-margin">refresh</mat-icon>
+    Aktualisieren
   </button>
 </span>
 <mat-table matSort [dataSource]="rooms">
@@ -31,6 +35,10 @@
   <ng-container matColumnDef="actions">
     <mat-header-cell *matHeaderCellDef>Aktionen</mat-header-cell>
     <mat-cell *matCellDef="let room">
+      <button mat-icon-button matTooltip="Planen" color="accent" style="margin-right: 16px;"
+        (click)="onScheduleMovie(room)">
+        <mat-icon svgIcon="calendar_clock"></mat-icon>
+      </button>
       <button mat-icon-button matTooltip="Bearbeiten" color="accent" class="actions-margin"
         (click)="showCreateEditDialog(room, true)">
         <mat-icon>edit</mat-icon>

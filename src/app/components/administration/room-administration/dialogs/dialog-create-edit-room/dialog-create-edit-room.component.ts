@@ -23,7 +23,7 @@ export class DialogCreateEditRoomComponent implements OnInit {
 
   public schedules: Schedule[] = [];
   public roomPlan: RoomPlan = new RoomPlan(0, 0, null, [], 10, 6);
-  public selectedScheduleIndex: number;
+  public selectedScheduleIndex: number = -1;
   public seatRows: SeatRow[] = [];
   public selectedSeatPosition: SeatPosition;
   public seatTypes: SeatType[] = [];
@@ -40,7 +40,7 @@ export class DialogCreateEditRoomComponent implements OnInit {
     if (!!data) {
       this.isEdit = data.isEdit;
 
-      this.room = this.isEdit ? data.room : new Room(0, '', null, this.roomPlan, false);
+      this.room = this.isEdit ? data.room : new Room(0, '', 0, new Schedule(0, []), 0, this.roomPlan, false);
     }
 
   }
@@ -49,8 +49,11 @@ export class DialogCreateEditRoomComponent implements OnInit {
     this.scheduleService.getSchedules().subscribe(schedules => {
       this.schedules = schedules;
 
+      this.oldColumnCount = this.roomPlan.columns;
+      this.oldRowCount = this.roomPlan.rows;
+
       if (this.isEdit) {
-        this.selectedScheduleIndex = schedules.findIndex(x => x.roomId === this.room.id);
+        this.selectedScheduleIndex = schedules.find(x => x.id === this.room.scheduleId).id;
         this.roomPlan = this.room.roomPlan;
         this.oldColumnCount = this.roomPlan.columns;
         this.oldRowCount = this.roomPlan.rows;
@@ -61,6 +64,11 @@ export class DialogCreateEditRoomComponent implements OnInit {
           }
           this.seatRows.push(seatRow);
         }
+      } else {
+        this.scheduleService.generateSchedule(false).subscribe(id => {
+          this.room.scheduleId = id;
+          this.room.schedule.id = id;
+        });
       }
       this.isLoaded = true;
     });
@@ -73,8 +81,23 @@ export class DialogCreateEditRoomComponent implements OnInit {
     });
   }
 
+  public onGenerateSchedule() {
+    this.scheduleService.generateSchedule(true).subscribe(id => {
+      this.scheduleService.getSchedules().subscribe(schedules => {
+        this.schedules = schedules;
+        const schedule = this.schedules.find(x => x.id === id);
+        this.selectedScheduleIndex = schedule.id;
+        if (this.selectedScheduleIndex >= 0) {
+          this.room.schedule = schedule;
+          this.room.scheduleId = schedule.id;
+        }
+      });
+    });
+  }
+
   public onScheduleIndexChanged(event: MatSelectChange) {
-    this.room.schedule = this.schedules[event.value];
+    this.room.schedule = this.schedules.find(x => x.id === event.value);
+    this.room.scheduleId = this.room.schedule.id;
   }
 
   public onConfirmClicked(): void {
@@ -86,8 +109,19 @@ export class DialogCreateEditRoomComponent implements OnInit {
       });
     });
 
-    this.roomPlan.seats = seats;
-    this.dialogRef.close(this.room);
+    if (!this.isEdit) {
+      this.scheduleService.generateSchedule(true).subscribe(id => {
+        this.roomPlan.seats = seats;
+        this.room.roomPlan.id = 0;
+        this.room.roomPlanId = 0;
+        this.room.schedule.id = 0;
+        this.room.scheduleId = id;
+        this.dialogRef.close(this.room);
+      });
+    } else {
+      this.roomPlan.seats = seats;
+      this.dialogRef.close(this.room);
+    }
   }
 
   public onAbortClicked(): void {

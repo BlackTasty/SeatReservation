@@ -1,6 +1,6 @@
 import { ClickableSeatComponent } from './../../shared/components/clickable-seat/clickable-seat.component';
 import { PipesModule } from './../../pipes.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './../../material.module';
 import { MovieAdministrationComponent } from './movies/movie-administration.component';
 import { NgModule } from '@angular/core';
@@ -16,6 +16,9 @@ import { GeneralSettingsComponent } from './general-settings/general-settings.co
 import { DialogCreateEditRoomComponent } from './room-administration/dialogs/dialog-create-edit-room/dialog-create-edit-room.component';
 import { DialogRemoveRoomComponent } from './room-administration/dialogs/dialog-remove-room/dialog-remove-room.component';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { MatNativeDateModule } from '@angular/material';
+import { DialogScheduleMovieComponent } from './schedule/dialogs/dialog-schedule-movie/dialog-schedule-movie.component';
+import { MovieRevenueChartComponent } from './schedule/movie-revenue-chart/movie-revenue-chart.component';
 
 @NgModule({
   declarations: [
@@ -29,12 +32,16 @@ import { NgxEchartsModule } from 'ngx-echarts';
     GeneralSettingsComponent,
     DialogCreateEditRoomComponent,
     DialogRemoveRoomComponent,
-    ClickableSeatComponent
+    ClickableSeatComponent,
+    DialogScheduleMovieComponent,
+    MovieRevenueChartComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     FormsModule,
+    ReactiveFormsModule,
+    MatNativeDateModule,
     AdministrationRoutingModule,
     PipesModule,
     NgxEchartsModule
@@ -43,7 +50,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
     DialogArchiveMovieComponent,
     DialogCreateEditMovieComponent,
     DialogRemoveRoomComponent,
-    DialogCreateEditRoomComponent
+    DialogCreateEditRoomComponent,
+    DialogScheduleMovieComponent
   ]
 })
 export class AdministrationModule { }

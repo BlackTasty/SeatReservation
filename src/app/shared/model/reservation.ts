@@ -7,7 +7,8 @@ export class Reservation {
               public scheduleSlot: ScheduleSlot,
               public scheduleSlotId: number,
               public roomId: number,
-              public reservationStatus: ReservationStatus) {
+              public reservationStatus: ReservationStatus,
+              public bookingDate: Date) {
 
               }
 }

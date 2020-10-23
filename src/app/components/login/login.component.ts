@@ -28,7 +28,8 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      stayLoggedIn: [false]
     });
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
   }
@@ -39,7 +40,7 @@ export class LoginComponent implements OnInit {
     this.error = '';
 
     this.loading = true;
-    this.authenticationService.login(this.form.username.value, this.form.password.value, false).subscribe(
+    this.authenticationService.login(this.form.username.value, this.form.password.value, this.form.stayLoggedIn.value).subscribe(
       (user: User) => {
         this.router.navigate(['']);
         this.loading = false;
