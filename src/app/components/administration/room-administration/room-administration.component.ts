@@ -1,7 +1,8 @@
+import { LocationService } from './../../../core/services/location.service';
 import { DialogRemoveRoomComponent } from './dialogs/dialog-remove-room/dialog-remove-room.component';
 import { DialogCreateEditRoomComponent } from './dialogs/dialog-create-edit-room/dialog-create-edit-room.component';
 import { RoomService } from './../../../core/services/room.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Room } from 'src/app/shared/model/room';
 import { MatDialogConfig, MatPaginator, MatSort, MatDialog, MatTableDataSource, MatSlideToggleChange } from '@angular/material';
 import { DialogScheduleMovieComponent } from '../schedule/dialogs/dialog-schedule-movie/dialog-schedule-movie.component';
@@ -11,7 +12,7 @@ import { DialogScheduleMovieComponent } from '../schedule/dialogs/dialog-schedul
   templateUrl: './room-administration.component.html',
   styleUrls: ['./room-administration.component.scss']
 })
-export class RoomAdministrationComponent implements OnInit {
+export class RoomAdministrationComponent implements OnInit, AfterViewInit {
   public displayedColumns = [ 'isOpen', 'name', 'seatCount', 'actions'];
   public rooms: MatTableDataSource<Room>;
 
@@ -19,6 +20,7 @@ export class RoomAdministrationComponent implements OnInit {
   @ViewChild(MatSort) moviesSort: MatSort;
 
   constructor(private roomService: RoomService,
+              private locationService: LocationService,
               private dialog: MatDialog) {
     this.rooms = new MatTableDataSource();
   }
@@ -26,15 +28,25 @@ export class RoomAdministrationComponent implements OnInit {
   ngOnInit() {
     this.rooms.sort = this.moviesSort;
     this.rooms.paginator = this.moviesPaginator;
-    this.loadRooms();
+    //this.loadRooms();
+  }
+
+  ngAfterViewInit() {
+    this.locationService.selectedLocationChanged.subscribe(result => {
+      this.loadRooms();
+    });
   }
 
   public loadRooms(): void {
-    this.roomService.getRooms().subscribe(
+    this.rooms.data = this.locationService.getSelectedLocation().rooms;
+    /*const selectedLocationIdRaw = localStorage.getItem('selLoc');
+    const id = Number.parseInt(selectedLocationIdRaw, 10);
+
+    this.locationService.getAssignedRoomsForLocation(id).subscribe(
       rooms => {
         this.rooms.data = rooms;
       }
-    );
+    );*/
   }
 
   public getSeatCountForRoom(room: Room): number {
@@ -90,6 +102,9 @@ export class RoomAdministrationComponent implements OnInit {
             this.roomService.addRoom(resultRoom).subscribe(result => {
               if (result === true) {
                 this.loadRooms();
+                this.locationService.getSelectedLocation().rooms.push(resultRoom);
+                this.locationService.updateSelectedLocation().subscribe(locationResult => {
+                });
               }
             });
           } else {

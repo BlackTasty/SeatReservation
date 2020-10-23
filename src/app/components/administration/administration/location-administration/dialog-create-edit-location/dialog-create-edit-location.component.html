@@ -1,0 +1,110 @@
+<div>
+  <h2 mat-dialog-title>{{isEdit ? "Standort bearbeiten" : "Standort hinzufügen"}}</h2>
+
+  <mat-dialog-content>
+    <div>
+      <span style="display: flex; flex-direction: column;">
+        <mat-form-field style="flex: 1;">
+          <input matInput placeholder="Standort Name" [(ngModel)]="location.name" required>
+        </mat-form-field>
+        <mat-form-field style="flex: 1;">
+          <mat-select placeholder="Land" [(ngModel)]="selectedCountry" required (valueChange)="onCountryChanged($event)">
+            <mat-option *ngFor="let country of countries" [value]="country.id">{{country.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="flex: 1;">
+          <input matInput placeholder="Adresse" [(ngModel)]="location.address" required>
+        </mat-form-field>
+        <span style="display: flex;">
+          <mat-form-field style="width: 120px;">
+            <input matInput placeholder="PLZ" [(ngModel)]="location.zipCode" required>
+          </mat-form-field>
+          <mat-form-field style="width: 180px;">
+            <input matInput placeholder="Bundesland" [(ngModel)]="location.state" required>
+          </mat-form-field>
+        </span>
+        <mat-form-field style="flex: 1;">
+          <input matInput placeholder="Logo (optional)" [(ngModel)]="location.logo">
+        </mat-form-field>
+        <div>
+          <mat-divider></mat-divider>
+          <mat-expansion-panel style="margin-bottom: 8px">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Zugewiesene Räume
+              </mat-panel-title>
+              <mat-panel-description>
+                Kinosäle dem Standort zuweisen
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div style="max-height: 300px; overflow-y: auto; display: flex;">
+              <mat-table matSort [dataSource]="assignedRooms">
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef>Raum Name</mat-header-cell>
+                  <mat-cell *matCellDef="let room">
+                    {{room.name}}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="seatCount">
+                  <mat-header-cell *matHeaderCellDef># Sitzplätze</mat-header-cell>
+                  <mat-cell *matCellDef="let room">
+                    <label>
+                      {{getSeatCountForRoom(room)}}
+                    </label>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <mat-header-cell *matHeaderCellDef>Aktionen</mat-header-cell>
+                  <mat-cell *matCellDef="let room">
+                    <button mat-icon-button matTooltip="Zuweisung aufheben" color="accent" class="actions-margin"
+                      (click)="onUnassignRoomClicked(room)">
+                      <mat-icon>remove</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+              </mat-table>
+              <mat-table matSort [dataSource]="unassignedRooms">
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef>Raum Name</mat-header-cell>
+                  <mat-cell *matCellDef="let room">
+                    {{room.name}}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="seatCount">
+                  <mat-header-cell *matHeaderCellDef># Sitzplätze</mat-header-cell>
+                  <mat-cell *matCellDef="let room">
+                    <label>
+                      {{getSeatCountForRoom(room)}}
+                    </label>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <mat-header-cell *matHeaderCellDef>Aktionen</mat-header-cell>
+                  <mat-cell *matCellDef="let room">
+                    <button mat-icon-button matTooltip="Zuweisen" color="accent" class="actions-margin"
+                      (click)="onAssignRoomClicked(room)">
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+              </mat-table>
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </span>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions-container">
+    <div class="dialog-actions-content">
+      <button mat-raised-button color="warn" (click)="onAbortClicked()">Abbrechen</button>
+      <button mat-raised-button color="accent" (click)="onConfirmClicked()">Bestätigen</button>
+    </div>
+  </mat-dialog-actions>
+</div>

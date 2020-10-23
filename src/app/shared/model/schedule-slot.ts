@@ -12,9 +12,4 @@ export class ScheduleSlot {
               public reservations: Reservation[]) {
 
   }
-
-  public overlapsWithPlannedSchedule(start: Date, end: Date): boolean {
-    return moment(start).isBetween(this.start, this.end) ||
-           moment(end).isBetween(this.start, this.end);
-  }
 }

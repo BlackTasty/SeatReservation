@@ -1,20 +1,11 @@
 <mat-tab-group #tabGroup (selectedTabChange)="onTabChange($event.index)">
   <mat-tab *ngIf="authenticationService.hasPermission(2)">
     <ng-template mat-tab-label>
-      <mat-icon style="margin: 0 8px">settings</mat-icon>
-      <label>Allgemein</label>
+      <mat-icon style="margin: 0 8px">location_on</mat-icon>
+      <label>Standorte</label>
     </ng-template>
     <mat-card>
-      <app-general-settings></app-general-settings>
-    </mat-card>
-  </mat-tab>
-  <mat-tab *ngIf="authenticationService.hasPermission(5)">
-    <ng-template mat-tab-label>
-      <mat-icon style="margin: 0 8px">movie</mat-icon>
-      <label>Filme</label>
-    </ng-template>
-    <mat-card>
-      <app-movie-administration></app-movie-administration>
+      <app-location-administration></app-location-administration>
     </mat-card>
   </mat-tab>
   <mat-tab *ngIf="authenticationService.hasPermission(3)">
@@ -24,6 +15,15 @@
     </ng-template>
     <mat-card>
       <app-room-administration></app-room-administration>
+    </mat-card>
+  </mat-tab>
+  <mat-tab *ngIf="authenticationService.hasPermission(5)">
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px">movie</mat-icon>
+      <label>Filme</label>
+    </ng-template>
+    <mat-card>
+      <app-movie-administration></app-movie-administration>
     </mat-card>
   </mat-tab>
   <mat-tab *ngIf="authenticationService.hasPermission(5)">

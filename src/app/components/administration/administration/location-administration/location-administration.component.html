@@ -1,0 +1,89 @@
+<span class="flex-container">
+  <button mat-raised-button color="primary" style="margin: 8px 0" (click)="showCreateEditDialog(null, false)">
+    <mat-icon class="icon-margin">add</mat-icon>
+    Standort hinzufügen
+  </button>
+  <span style="flex: 1"></span>
+  <button mat-raised-button color="primary" style="margin: 8px 0" (click)="loadLocations()">
+    <mat-icon class="icon-margin">refresh</mat-icon>
+    Aktualisieren
+  </button>
+</span>
+<mat-table matSort [dataSource]="locations">
+  <ng-container matColumnDef="isShutdown">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Geöffnet</mat-header-cell>
+    <mat-cell *matCellDef="let location">
+      <mat-slide-toggle [(ngModel)]="!location.isShutdown" (change)="locationShutdownChanged($event)">
+      </mat-slide-toggle>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="logo">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let location">
+      <img [src]="domSanitizer.bypassSecurityTrustUrl(location.logo)" style="height: 40px; width: 40px; object-fit: contain;"
+        [ngClass]="location.isShutdown ? 'archived' : ''">
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Titel</mat-header-cell>
+    <mat-cell *matCellDef="let location" [ngClass]="location.isShutdown ? 'text-archived' : ''">
+      {{location.isShutdown ? location.name + ' (geschlossen)' : location.name}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="country">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Land</mat-header-cell>
+    <mat-cell *matCellDef="let location">
+      <label [ngClass]="location.isShutdown ? 'text-archived' : ''">
+        {{location.country}}
+      </label>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="state">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Bundesland</mat-header-cell>
+    <mat-cell *matCellDef="let location">
+      <label [ngClass]="location.isShutdown ? 'text-archived' : ''">
+        {{location.state}}
+      </label>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="zipCode">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>PLZ</mat-header-cell>
+    <mat-cell *matCellDef="let location">
+      <label [ngClass]="location.isShutdown ? 'text-archived' : ''">
+        {{location.zipCode}}
+      </label>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="address">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Adresse</mat-header-cell>
+    <mat-cell *matCellDef="let location" [ngClass]="location.isShutdown ? 'text-archived' : ''">
+      <label [ngClass]="location.isShutdown ? 'text-archived' : ''">
+        {{location.address}}
+      </label>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="rooms">
+    <mat-header-cell mat-sort-header *matHeaderCellDef># Räume</mat-header-cell>
+    <mat-cell *matCellDef="let location" [ngClass]="location.isShutdown ? 'text-archived' : ''">
+      <label [ngClass]="location.isShutdown ? 'text-archived' : ''">
+        {{location.rooms.length}}
+      </label>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>Aktionen</mat-header-cell>
+    <mat-cell *matCellDef="let location">
+      <button mat-icon-button matTooltip="Bearbeiten" color="accent" class="actions-margin"
+        (click)="showCreateEditDialog(location, true)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
+<span style="display: flex; align-items: center;">
+  <mat-slide-toggle (change)="loadLocations()" [(ngModel)]="showShutdown">Geschlossene Standorte anzeigen</mat-slide-toggle>
+  <span class="spacer"></span>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</span>

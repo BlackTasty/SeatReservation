@@ -65,6 +65,13 @@
           </label>
         </span>
         <span class="spacer"></span>
+        <mat-form-field style="margin-right: 64px; width: 300px; font-size: 1rem; margin-top: 16px;">
+          <mat-select [(value)]="selectedLocationId" placeholder="Standort" (selectionChange)="onSelectedLocationChanged()">
+            <mat-option *ngFor="let location of locations" [value]="location.id">
+              {{location.name}} ({{location.zipCode}} {{location.state}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
         <!--<button mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon>more_vert</mat-icon>
         </button>-->

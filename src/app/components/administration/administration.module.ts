@@ -19,6 +19,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { MatNativeDateModule } from '@angular/material';
 import { DialogScheduleMovieComponent } from './schedule/dialogs/dialog-schedule-movie/dialog-schedule-movie.component';
 import { MovieRevenueChartComponent } from './schedule/movie-revenue-chart/movie-revenue-chart.component';
+import { LocationAdministrationComponent } from './administration/location-administration/location-administration.component';
+import { DialogCreateEditLocationComponent } from './administration/location-administration/dialog-create-edit-location/dialog-create-edit-location.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { MovieRevenueChartComponent } from './schedule/movie-revenue-chart/movie
     DialogRemoveRoomComponent,
     ClickableSeatComponent,
     DialogScheduleMovieComponent,
-    MovieRevenueChartComponent
+    MovieRevenueChartComponent,
+    LocationAdministrationComponent,
+    DialogCreateEditLocationComponent
   ],
   imports: [
     CommonModule,
@@ -51,7 +55,8 @@ import { MovieRevenueChartComponent } from './schedule/movie-revenue-chart/movie
     DialogCreateEditMovieComponent,
     DialogRemoveRoomComponent,
     DialogCreateEditRoomComponent,
-    DialogScheduleMovieComponent
+    DialogScheduleMovieComponent,
+    DialogCreateEditLocationComponent
   ]
 })
 export class AdministrationModule { }

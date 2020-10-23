@@ -1,3 +1,4 @@
+import { LocationService } from './../../../core/services/location.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ScheduleSlot } from './../../../shared/model/schedule-slot';
 import { RoomService } from './../../../core/services/room.service';
@@ -41,7 +42,10 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private rooms: Room[] = [];
 
-  constructor(private roomService: RoomService, private zone: NgZone, private dialog: MatDialog,
+  constructor(private roomService: RoomService,
+              private locationService: LocationService,
+              private zone: NgZone,
+              private dialog: MatDialog,
               public domSanitizer: DomSanitizer) {
     this.pendingMovies = new MatTableDataSource();
     this.runningMovies = new MatTableDataSource();
@@ -72,6 +76,11 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
       categoryAxis.renderer.inversed = true;
       categoryAxis.renderer.labels.template.fill = am4core.color('#FFFFFF');
       categoryAxis.renderer.labels.template.stroke = am4core.color('#CCCCCC');
+      categoryAxis.events.on('sizechanged', (ev) => {
+          const axis = ev.target;
+          const cellWidth = axis.pixelWidth / (axis.endIndex - axis.startIndex);
+          axis.renderer.labels.template.maxWidth = cellWidth;
+        });
 
       const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
       dateAxis.renderer.minGridDistance = 70;
@@ -89,7 +98,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const series = chart.series.push(new am4charts.ColumnSeries());
       series.columns.template.height = am4core.percent(70);
-      series.columns.template.tooltipText = '{task}: [bold]{openDateX}[/] - [bold]{dateX}[/]';
+      series.columns.template.tooltipText = "[bold]{task}[/]\n[bold]Von:[/] {openDateX.formatDate('HH:mm')}\n[bold]Bis:[/] {dateX.formatDate('HH:mm')}";
       series.dataFields.openDateX = 'start';
       series.dataFields.dateX = 'end';
       series.dataFields.categoryY = 'category';
@@ -109,7 +118,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       const valueLabel = series.columns.template.createChild(am4core.Label);
       valueLabel.text = '{task}';
-      valueLabel.fontSize = 16;
+      valueLabel.fontSize = 14;
       valueLabel.valign = 'middle';
       valueLabel.align = 'center';
       valueLabel.wrap = true;
@@ -117,8 +126,14 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
       valueLabel.stroke = am4core.color('#000000');
       valueLabel.fontWeight = 'bold';
       valueLabel.strokeWidth = 0;
+      valueLabel.events.on('sizechanged', (ev) => {
+        const label = ev.target;
+        const container = label.parent;
+        label.maxWidth = container.measuredWidth - 8;
+      });
 
       chart.scrollbarX = new am4core.Scrollbar();
+      this.chart = chart;
 
       this.refreshData(chart);
     });
@@ -129,6 +144,10 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.selectedScheduleSlotMovie = event.movie;
         this.selectedScheduleSlotRoom = event.room;
       });
+    });
+
+    this.locationService.selectedLocationChanged.subscribe(result => {
+      this.refreshChart();
     });
   }
 
@@ -146,11 +165,11 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private refreshData(chart: am4charts.XYChart) {
     const colorSet = new am4core.ColorSet();
-    this.roomService.getRooms().subscribe(rooms => {
+    if (!!this.locationService.getSelectedLocation()) {
+      this.rooms = this.locationService.getSelectedLocation().rooms;
       const data = [];
-      this.rooms = rooms;
 
-      rooms.forEach(room => {
+      this.rooms.forEach(room => {
         // Only show rooms with a schedule
         if (room.scheduleId > 0) {
           const scheduleOfDay = room.schedule.movieSchedule.filter(x => this.checkDate(x.start));
@@ -187,7 +206,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
                               selectedDate.getDate() + 1, 0, 0, 0, 0).getTime();
       dateAxis.disabled = false;
       this.chart = chart;
-    });
+    }
   }
 
   private checkDate(scheduleSlotDateRaw) {

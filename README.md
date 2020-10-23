@@ -1,5 +1,14 @@
 # SeatReservation
 
+## TODO
+- Sitzplatzreservierung (gebunden an ausgewählten Standort, gewählten Film und gewählten Raum)
+- Landing Page (zeige featured Filme in Karussell an)
+- Film Page (zeige Details + Schedule an)
+
+## LocalStorage properties
+- selLoc = selectedLocation (Global abrufbar um zu checken welcher Standort ausgewählt wurde)
+
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
 
 ## Development server
