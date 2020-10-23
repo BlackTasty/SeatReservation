@@ -100,10 +100,13 @@ export class RoomAdministrationComponent implements OnInit, AfterViewInit {
         if (!!resultRoom) {
           if (!isEdit) {
             this.roomService.addRoom(resultRoom).subscribe(result => {
-              if (result === true) {
-                this.loadRooms();
+              if (result > -1) {
+                resultRoom.Id = result;
                 this.locationService.getSelectedLocation().rooms.push(resultRoom);
                 this.locationService.updateSelectedLocation().subscribe(locationResult => {
+                  if (!!locationResult) {
+                    this.loadRooms();
+                  }
                 });
               }
             });

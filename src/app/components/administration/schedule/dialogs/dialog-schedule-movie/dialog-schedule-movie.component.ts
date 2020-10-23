@@ -1,3 +1,4 @@
+import { LocationService } from './../../../../../core/services/location.service';
 import { ScheduleService } from './../../../../../core/services/schedule.service';
 import { ScheduleSlot } from './../../../../../shared/model/schedule-slot';
 import { RoomService } from './../../../../../core/services/room.service';
@@ -41,6 +42,7 @@ export class DialogScheduleMovieComponent implements OnInit, AfterViewInit, OnDe
               private movieService: MovieService,
               private roomService: RoomService,
               private scheduleService: ScheduleService,
+              private locationService: LocationService,
               @Inject(MAT_DIALOG_DATA) data) {
     const currentDate = new Date();
     this.startTime = currentDate.getHours() + ':' + currentDate.getMinutes();
@@ -61,11 +63,14 @@ export class DialogScheduleMovieComponent implements OnInit, AfterViewInit, OnDe
       this.movies = movies;
     });
 
-    this.roomService.getRooms().subscribe(rooms => {
+    this.rooms = this.locationService.getSelectedLocation().rooms;
+    /*this.roomService.getRooms().subscribe(rooms => {
       this.rooms = rooms;
-    });
+    });*/
     this.refreshTimer = setInterval(() => {
-      this.chartIndicator.date = new Date();
+      if (!!this.chartIndicator) {
+        this.chartIndicator.date = new Date();
+      }
     }, 10000);
   }
 
@@ -198,10 +203,10 @@ export class DialogScheduleMovieComponent implements OnInit, AfterViewInit, OnDe
 
     const room = this.rooms.find(x => x.id === this.selectedRoomId);
 
-    if (!!this.selectedMovieId) {
+    if (!!room && !!this.selectedMovieId) {
       const startTime = this.getCombinedDate().toDate();
       const endTime = this.getEndTime().toDate();
-      const isOverlapping = this.checkOverlap(room.schedule.movieSchedule, startTime, endTime);
+      const isOverlapping = this.checkOverlap(!!room && !!room.schedule ? room.schedule.movieSchedule : null, startTime, endTime);
 
       data.push({
         category: room.name,
@@ -253,7 +258,15 @@ export class DialogScheduleMovieComponent implements OnInit, AfterViewInit, OnDe
 
       this.scheduleService.scheduleMovie(new RoomScheduleSlot(this.selectedRoomId, scheduleSlot)).subscribe(result => {
         if (!!result) {
-          this.dialogRef.close(true);
+          this.roomService.getRoomById(room.id).subscribe(updatedRoom => {
+            if (!!updatedRoom) {
+              const target = this.locationService.getSelectedLocation().rooms.find(x => x.id === updatedRoom.id);
+              if (!!target) {
+                target.schedule = updatedRoom.schedule;
+                this.dialogRef.close(true);
+              }
+            }
+          });
         } else {
           console.error('Error scheduling movie');
         }
@@ -264,6 +277,10 @@ export class DialogScheduleMovieComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private checkOverlap(schedule: ScheduleSlot[], start: Date, end: Date): boolean {
+    if (!!!schedule) {
+      return false;
+    }
+
     let isOverlapping = false;
     schedule.filter(x => moment(start).isBetween(x.start, x.end) || moment(end).isBetween(x.start, x.end))
             .forEach(scheduleSlot => {

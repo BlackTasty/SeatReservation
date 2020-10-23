@@ -1,3 +1,4 @@
+import { Location } from './../../shared/model/location';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -38,9 +39,16 @@ export class RoomService {
     }));
   }
 
-  public addRoom(room: Room): Observable<boolean> {
+  public getRoomById(id: number): Observable<Room> {
+    return this.httpClient.get(this.hostName + '/getroombyid?id=' + id)
+    .pipe(map((result: Room) => {
+      return result;
+    }));
+  }
+
+  public addRoom(room: Room): Observable<number> {
     return this.httpClient.post(this.hostName + '/addroom', room)
-    .pipe(map((result: boolean) => {
+    .pipe(map((result: number) => {
       return result;
     }));
   }
