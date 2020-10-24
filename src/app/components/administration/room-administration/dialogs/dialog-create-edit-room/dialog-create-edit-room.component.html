@@ -67,7 +67,7 @@
             Spalte {{selectedSeatPosition?.column}}
           </label>
           <span class="spacer"></span>
-          <mat-form-field *ngIf="isLoaded" style="height: 40px;" color="accent">
+          <mat-form-field *ngIf="isLoaded" style="height: 40px; width: 220px;" color="accent">
             <mat-select placeholder="Sitzplatztyp" [disabled]="!(!!selectedSeatPosition)"
               [(ngModel)]="selectedSeatTypeIndex" (valueChange)="onSelectedSeatTypeChanged($event)">
               <mat-option *ngFor="let seatType of seatTypes" [value]="seatType.id">
@@ -76,7 +76,7 @@
                     [src]="domSanitizer.bypassSecurityTrustUrl(seatType.seatImage)"
                     class="seat-type-option-image">
                     <label [ngClass]="!(!!seatType.seatImage) || seatType.seatImage === '' ? 'seat-type-option-no-image' : ''">
-                      {{seatType.name}}
+                      {{seatType.name}} {{seatType.seatCount > 0 ? '(' + (seatType.basePrice | currency:'EUR') + ')' : ''}}
                     </label>
                 </span>
               </mat-option>

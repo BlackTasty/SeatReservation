@@ -88,4 +88,11 @@ export class LocationService {
       return result;
     }));
   }
+
+  public getLocationByRoomId(roomId: number): Observable<Location> {
+    return this.httpClient.get(this.hostName + '/getlocationbyroomid?id=' + roomId)
+    .pipe(map((result: Location) => {
+      return result;
+    }));
+  }
 }

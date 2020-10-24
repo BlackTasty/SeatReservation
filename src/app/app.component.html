@@ -21,6 +21,11 @@
           <mat-icon class="sidebar-icon">theaters</mat-icon>
           <label *ngIf="isOpen">Filme</label>
         </a>
+        <a mat-list-item routerLink="/movies/schedule" [matTooltip]="isOpen ? '' : 'Kinoprogramm'"
+          [ngClass]="{'active-link': currentRoute == '/movies/schedule'}">
+          <mat-icon class="sidebar-icon" [class.sub-nav-link]="isOpen" svgIcon="timeline_clock"></mat-icon>
+          <label *ngIf="isOpen">Kinoprogramm</label>
+        </a>
         <a mat-list-item routerLink="/admin" [matTooltip]="isOpen ? '' : 'Administration'"
           *ngIf="!authenticationService.isNormalUser()"
           [ngClass]="{'active-link': currentRoute == '/admin'}">

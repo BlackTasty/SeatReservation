@@ -19,10 +19,7 @@ import { MovieCardComponent } from './shared/components/movie-card/movie-card.co
 import { LoginComponent } from './components/login/login.component';
 
 import localeDeAt from '@angular/common/locales/de-AT';
-import { MovieScheduleComponent } from './components/movies/movie-details/movie-schedule/movie-schedule.component';
-import { MoviesComponent } from './components/movies/movies.component';
-import { SearchResultsComponent } from './components/movies/search-results/search-results.component';
-import { MovieDetailsComponent } from './components/movies/movie-details/movie-details.component';
+import { MatNativeDateModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -42,6 +39,7 @@ import { MovieDetailsComponent } from './components/movies/movie-details/movie-d
     HttpClientModule,
     MaterialModule,
     FormsModule,
+    MatNativeDateModule,
     ReactiveFormsModule
   ],
   providers: [

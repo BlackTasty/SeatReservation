@@ -1,0 +1,247 @@
+<mat-horizontal-stepper [linear]="true">
+  <!--<mat-step [stepControl]="movieFormGroup">
+    <form [formGroup]="movieFormGroup">
+      <ng-template matStepLabel>Film auswählen</ng-template>
+
+    </form>
+  </mat-step>-->
+  <mat-step [stepControl]="seatsFormGroup" #stepper>
+    <form [formGroup]="seatsFormGroup">
+      <ng-template matStepLabel>Sitzplätze wählen</ng-template>
+      <div style="display: flex; flex-direction: column;">
+        <h2>Sitzplätze wählen</h2>
+        <span style="display: flex;">
+          <h4>Vorstellung</h4>
+          <span style="margin-left: 48px; display: flex; flex-direction: column;">
+            <h4 style="font-weight: normal; margin-bottom: 4px;">{{selectedScheduleSlot?.movie?.title}}</h4>
+            <h5 class="gray-color" style="margin-top: 4px;">{{selectedScheduleSlot?.room?.technology?.name}}</h5>
+          </span>
+          <span class="spacer"></span>
+          <h4>Karten</h4>
+          <mat-form-field color="accent" floatLabel="always" style="align-self: flex-end; margin-bottom: -6px; margin-left: 48px;">
+            <input matInput type="number" min="1" max="6" placeholder="Karten gesamt" (change)="onTicketCountChanged()"
+                   formControlName="ticketCount" required>
+          </mat-form-field>
+          <mat-form-field color="accent" floatLabel="always" style="align-self: flex-end; margin-bottom: -6px; margin-left: 16px;">
+            <input matInput type="number" min="0" [max]="seatsFormGroup.controls['ticketCount'].value - 1" placeholder="Davon Kinder (unter 14 Jahre)"
+            formControlName="ticketChildrenCount">
+          </mat-form-field>
+        </span>
+        <mat-divider></mat-divider>
+        <!-- Room plan display -->
+        <div style="display: flex;">
+          <span style="display: flex; flex-direction: column; align-self: flex-start; margin: 0 32px 0 16px;">
+            <label style="align-self: center; color: gray; font-size: .85rem; margin-top: 8px; margin-left: 33px;">
+              Leinwand
+            </label>
+            <svg style="align-self: center; margin-bottom: -48px; margin-left: 33px">
+              <path d="M 0 35 q 150 -50 300 0" stroke="gray"
+              stroke-width="2" fill="none" />
+            </svg>
+            <div *ngFor="let seatRow of seatRows" style="height: 32px; display: flex; margin: 6px 0; justify-content: center;">
+              <label style="margin-right: 24px; align-self: center; width: 9px;">{{seatRow.row}}</label>
+              <span *ngFor="let seat of seatRow.seats" style="width: 32px;"
+                [ngClass]="isSeatSelected(seat) ? 'seat-selected' : ''">
+                <app-clickable-seat [seatPosition]="seat" (seatClicked)="onSeatClicked($event)"></app-clickable-seat>
+              </span>
+            </div>
+          </span>
+          <span style="width: 100%; margin-top: 8px;">
+            <mat-card style="display: flex; flex-direction: column; height: calc(100% - 30px);"
+                      class="mat-elevation-z3">
+              <h3>Details</h3>
+              <label style="margin-bottom: 4px;">Kino: {{selectedScheduleSlot?.location?.name}} - {{selectedScheduleSlot?.room?.name}}</label>
+              <label style="margin-bottom: 4px;">Datum &amp; Uhrzeit: {{selectedScheduleSlot?.start | date: 'dd.MM.yyyy - HH:mm'}}</label>
+              <label style="margin-bottom: 4px;">
+                Reihe: {{!!selectedSeatPositions && selectedSeatPositions.length > 0 ? selectedSeatPositions[0].row : ''}}
+              </label>
+              <label style="margin-top: 4px;" *ngIf="selectedSeatPositions?.length == 1">
+                Sitz: {{selectedSeatPositions[0].column}}
+              </label>
+              <label style="margin-top: 4px;" *ngIf="selectedSeatPositions?.length > 1">
+                Sitz: {{selectedSeatPositions[0].column}}-{{selectedSeatPositions[selectedSeatPositions.length - 1].column}}
+              </label>
+              <span class="spacer"></span>
+              <label style="margin-top: 16px;">Preis pro Karte:</label>
+              <ul style="margin: 4px 0; padding-left: 24px;">
+                <li *ngFor="let seatPrice of generateTicketPrices()">
+                  {{seatPrice.amount}}x {{seatPrice.name}} - {{(seatPrice.amount * seatPrice.price) | currency:'EUR'}}
+                </li>
+              </ul>
+              <label *ngIf="selectedScheduleSlot?.room?.technology.extraCharge > 0">
+                Aufpreis für "{{selectedScheduleSlot?.room?.technology.name}}" pro Karte: {{selectedScheduleSlot?.room?.technology.extraCharge | currency:'EUR'}}
+              </label>
+              <span style="margin: 8px -16px -16px; padding: 16px; border-radius: 0 0 4px 4px; background-color: rgba(255,255,255,.1)">
+                <label style="font-size: 1.3rem;">Gesamt: {{calculatePrice() | currency:'EUR'}}</label>
+              </span>
+            </mat-card>
+          </span>
+        </div>
+      </div>
+      <span style="display: flex; margin-top: 18px; align-items: center;">
+        <span class="spacer"></span>
+        <mat-form-field *ngIf="!authenticationService.loggedIn" color="accent">
+          <input matInput type="email" formControlName="email" placeholder="E-Mail" [required]="!authenticationService.loggedIn">
+        </mat-form-field>
+        <button mat-raised-button matStepperNext color="primary"
+                [disabled]="!seatsFormGroup.valid" *ngIf="authenticationService.loggedIn"
+                (click)="isReservation = true; paymentType = '4';">
+          Reservieren
+        </button>
+        <button mat-raised-button matStepperNext color="primary" style="margin-left: 8px;"
+                [disabled]="!seatsFormGroup.valid"
+                (click)="isReservation = false; paymentType = '0';">
+          Kaufen
+        </button>
+      </span>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="paymentFormGroup"> <!---->
+      <ng-template matStepLabel>Kaufen / Reservieren</ng-template>
+      <h2>{{isReservation ? 'Reservieren' : 'Kaufen'}}</h2>
+      <mat-card class="mat-elevation-z3">
+        <span style="display: flex;">
+          <span style="display: flex; flex-direction: column; flex: .8;">
+            <h3>Vorstellung</h3>
+            <h4 style="margin: 4px 0 4px 8px">{{selectedScheduleSlot?.movie?.title}}</h4>
+            <label class="confirmation-label">{{selectedScheduleSlot?.room?.technology.name}}</label>
+            <label class="confirmation-label">{{selectedScheduleSlot?.location?.name}}</label>
+            <label class="confirmation-label">{{selectedScheduleSlot?.start | date:'dd. MMMM yyyy'}}</label>
+            <label class="confirmation-label">{{selectedScheduleSlot?.start | date:'HH:mm'}} - {{selectedScheduleSlot?.room?.name}}</label>
+          </span>
+          <span style="display: flex; flex-direction: column; flex: 1;">
+            <h3>Karten</h3>
+            <label class="confirmation-label">Karten gesamt: {{selectedSeatPositions?.length}}</label>
+            <ul class="confirmation-label" style="padding-left: 24px;">
+              <li *ngFor="let seatPrice of generateTicketPrices()">
+                {{seatPrice.amount}}x {{seatPrice.name}} - {{(seatPrice.amount * seatPrice.price) | currency:'EUR'}}
+              </li>
+            </ul>
+            <label class="confirmation-label" *ngIf="selectedScheduleSlot?.room?.technology.extraCharge > 0">
+              Aufpreis ({{selectedScheduleSlot?.room?.technology.name}}") pro Karte: {{selectedScheduleSlot?.room?.technology.extraCharge | currency:'EUR'}}
+            </label>
+            <label class="confirmation-label">
+              Reihe: {{!!selectedSeatPositions && selectedSeatPositions.length > 0 ? selectedSeatPositions[0].row : ''}}
+            </label>
+            <label class="confirmation-label" *ngIf="selectedSeatPositions?.length == 1">
+              Sitz: {{selectedSeatPositions[0].column}}
+            </label>
+            <label class="confirmation-label" *ngIf="selectedSeatPositions?.length > 1">
+              Sitz: {{selectedSeatPositions[0].column}}-{{selectedSeatPositions[selectedSeatPositions.length - 1].column}}
+            </label>
+          </span>
+          <span style="display: flex; flex-direction: column; flex: .6;">
+            <h3>Preis</h3>
+            <h4 class="confirmation-label">{{calculatePrice() | currency:'EUR'}}</h4>
+          </span>
+        </span>
+      </mat-card>
+      <span *ngIf="!isReservation">
+        <span style="display: flex; margin: 12px 0;">
+          <label style="flex: 1; margin-right: 16px;">
+            <b>Bitte überprüfe nochmal alle angeführten Daten (Kino, Datum, Sprachfassung)!</b>
+            Wenn du die oben stehende Auswahl abschließen und eine Buchungsnummer generieren willst, klicke auf den Bestätigungsbutton.
+          </label>
+          <label style="flex: 1; margin-left: 16px;">
+            Wir bitten um Kenntnisnahme, dass nach Abschluss des Kaufvorgangs Kinokarten <b>nicht storniert oder abgeändert werden</b> können und bei einem Kinokartenkauf gem. § 18 Abs.1 Zif 10 FAGG kein Rücktrittsrecht nach § 11 FAGG besteht. Weitere Informationen findest du in unseren AGBs.
+          </label>
+        </span>
+        <mat-divider></mat-divider>
+        <h3>Wähle eine Zahlungsart</h3>
+        <mat-radio-group style="display: flex; flex-direction: column;" [(ngModel)]="paymentType">
+          <mat-radio-button value="1" style="margin: 12px 0;">
+            <span style="display: flex;">
+              <label>Kartenzahlung</label>
+              <img [src]="domSanitizer.bypassSecurityTrustUrl('https://www.cineplexx.at/ticketing/static/mastercard.png')"/>
+              <img [src]="domSanitizer.bypassSecurityTrustUrl('https://www.cineplexx.at/ticketing/static/visa.png')"/>
+              <img [src]="domSanitizer.bypassSecurityTrustUrl('https://www.cineplexx.at/ticketing/static/diners_club.png')"/>
+            </span>
+          </mat-radio-button>
+          <mat-radio-button value="2" style="margin: 12px 0;">
+            <span style="display: flex;">
+              <label>Sofort</label>
+              <img [src]="domSanitizer.bypassSecurityTrustUrl('https://www.cineplexx.at/ticketing/static/sofort.png')"/>
+            </span>
+          </mat-radio-button>
+          <mat-radio-button value="3" style="margin: 12px 0;">
+            <span style="display: flex;">
+              <label>EPS</label>
+              <img [src]="domSanitizer.bypassSecurityTrustUrl('https://www.cineplexx.at/ticketing/static/eps.png')"/>
+            </span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </span>
+
+      <span *ngIf="isReservation" style="margin: 12px 0; display: flex;">
+          <label>
+            <b>Bitte überprüfe nochmal alle angeführten Daten (Kino, Datum, Sprachfassung)!</b>
+            Wenn du die oben stehende Auswahl abschließen und eine Buchungsnummer generieren willst, klicke auf den Bestätigungsbutton.
+          </label>
+      </span>
+
+      <form [formGroup]="paymentFormGroup"> <!---->
+      <span style="display: flex; flex-direction: column; margin: 12px 0;">
+        <mat-checkbox formControlName="acceptToS">Ja, ich akzeptiere die Allgemeinen Geschäftsbedingungen.</mat-checkbox>
+        <mat-checkbox formControlName="acceptDSGVO">Ja, ich habe die Datenschutzerklärung zur Kenntnis genommen.</mat-checkbox>
+      </span>
+      <mat-divider></mat-divider>
+
+      <span *ngIf="!isReservation" style="display: flex; margin-top: 18px;">
+        <button mat-raised-button matStepperPrevious color="warn" style="margin-right: 8px;"
+                (click)="isReservation = true">Zurück</button>
+        <span class="spacer"></span>
+        <button mat-raised-button matStepperNext color="primary" (click)="sellTickets(stepper)"
+                [disabled]="!paymentFormGroup.valid || !!!paymentType || paymentType == '0'">Zahlungspflichtig bestellen</button>
+      </span>
+
+      <span *ngIf="isReservation" style="display: flex; margin-top: 18px;">
+        <button mat-raised-button matStepperPrevious color="warn" style="margin-right: 8px;"
+                (click)="isReservation = true">Zurück</button>
+        <span class="spacer"></span>
+        <button mat-raised-button matStepperNext color="primary" (click)="generateReservations(stepper)"
+                [disabled]="!paymentFormGroup.valid">Rerservierung bestätigen</button>
+      </span>
+    </form>
+  </mat-step>
+  <mat-step #confirmationStep>
+    <form>
+      <ng-template matStepLabel>Abschließen</ng-template>
+      <h2>{{isReservation ? 'Sitzplätze wurden reserviert!' : 'Vielen Dank für Ihren Einkauf!'}}</h2>
+      <span style="display: flex;">
+        <span style="display: flex; flex-direction: column; flex: .8;">
+          <h3>Vorstellung</h3>
+          <h4 style="margin: 4px 0 4px 8px">{{selectedScheduleSlot?.movie?.title}}</h4>
+          <label class="confirmation-label">{{selectedScheduleSlot?.room?.technology.name}}</label>
+          <label class="confirmation-label">{{selectedScheduleSlot?.location?.name}}</label>
+          <label class="confirmation-label">{{selectedScheduleSlot?.start | date:'dd. MMMM yyyy'}}</label>
+          <label class="confirmation-label">{{selectedScheduleSlot?.start | date:'HH:mm'}} - {{selectedScheduleSlot?.room?.name}}</label>
+        </span>
+        <span style="display: flex; flex-direction: column; flex: 1;">
+          <h3>Karten</h3>
+          <label class="confirmation-label">Karten gesamt: {{selectedSeatPositions?.length}}</label>
+          <ul class="confirmation-label" style="padding-left: 24px;">
+            <li *ngFor="let seatPrice of generateTicketPrices()">
+              {{seatPrice.amount}}x {{seatPrice.name}} - {{(seatPrice.amount * seatPrice.price) | currency:'EUR'}}
+            </li>
+          </ul>
+          <label class="confirmation-label" *ngIf="selectedScheduleSlot?.room?.technology.extraCharge > 0">
+            Aufpreis ({{selectedScheduleSlot?.room?.technology.name}}") pro Karte: {{selectedScheduleSlot?.room?.technology.extraCharge | currency:'EUR'}}
+          </label>
+          <label class="confirmation-label">
+            Reihe: {{!!selectedSeatPositions && selectedSeatPositions.length > 0 ? selectedSeatPositions[0].row : ''}}
+          </label>
+          <label class="confirmation-label" *ngIf="selectedSeatPositions?.length == 1">
+            Sitz: {{selectedSeatPositions[0].column}}
+          </label>
+          <label class="confirmation-label" *ngIf="selectedSeatPositions?.length > 1">
+            Sitz: {{selectedSeatPositions[0].column}}-{{selectedSeatPositions[selectedSeatPositions.length - 1].column}}
+          </label>
+        </span>
+        <span style="display: flex; flex-direction: column; flex: .6;">
+          <h3>Preis</h3>
+          <h4 class="confirmation-label">{{calculatePrice() | currency:'EUR'}}</h4>
+        </span>
+      </span>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>

@@ -1,3 +1,85 @@
-<p>
-  search-results works!
-</p>
+<div style="display: flex; flex-direction: column;">
+  <span style="display: flex;">
+    <mat-form-field>
+      <mat-select [(value)]="selectedLocationId" placeholder="Kino" (selectionChange)="onLocationSelected()">
+        <mat-option [value]="0">Alle</mat-option>
+        <mat-option *ngFor="let location of locations" [value]="location.id">
+          {{ location.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field color="accent" style="width: 150px; margin: 0 8px;">
+      <mat-label>Datum</mat-label>
+      <input matInput [matDatepicker]="picker" [formControl]="date" (dateChange)="onDateChanged()" [(ngModel)]="selectedDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select [(value)]="selectedGenreId" placeholder="Genre" (selectionChange)="onGenreSelected()">
+        <mat-option [value]="0">Alle</mat-option>
+        <mat-option *ngFor="let genre of genres" [value]="genre.id">
+          {{ genre.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </span>
+  <mat-divider></mat-divider>
+  <h2>Kinoprogramm</h2>
+  <span style="display: flex; margin-bottom: 16px;">
+    <span style="margin-right: 24px;">
+      <mat-icon class="green-color" style="vertical-align: middle; margin-right: 4px;">confirmation_number</mat-icon>
+      <label style="font-size: .85rem">Online Kauf, Reservierung möglich</label>
+    </span>
+    <span style="margin-right: 24px;">
+      <mat-icon class="yellow-color" style="vertical-align: middle; margin-right: 4px;">confirmation_number</mat-icon>
+      <label style="font-size: .85rem">Online Kauf, keine Reservierung</label>
+    </span>
+    <span style="margin-right: 24px;">
+      <mat-icon class="red-color" style="vertical-align: middle; margin-right: 4px;">confirmation_number</mat-icon>
+      <label style="font-size: .85rem">Kauf nur vor Ort</label>
+    </span>
+    <span style="margin-right: 24px;">
+      <mat-icon class="gray-color" style="vertical-align: middle; margin-right: 4px;">confirmation_number</mat-icon>
+      <label style="font-size: .85rem">Nicht verfügbar</label>
+    </span>
+  </span>
+  <div style="margin: 0 8px;">
+    <div *ngFor="let movieProgram of cinemaProgram" style="display: flex; flex-direction: column; margin-bottom: 24px;">
+      <span style="display: flex;">
+        <img [src]="domSanitizer.bypassSecurityTrustUrl(movieProgram.movie.poster)"
+             style="height: 180px; width: 123px; margin: 16px 0;"/>
+        <span class="movie-base-container">
+          <span class="movie-info-container">
+            <h4 style="margin: 12px 0 4px 0;">{{movieProgram.movie.title}}</h4>
+            <label style="color: #999; font-size: .85rem; margin-bottom: 12px;">
+              {{movieProgram.movie.releaseDate | date: 'dd.MM.yyyy'}}
+            </label>
+            <label class="movie-description">
+              Kurzbeschreibung:<br/>
+              {{(movieProgram.movie.description.length > 190) ?
+                (movieProgram.movie.description | slice:0:190) + '...' : movieProgram.movie.description}}
+            </label>
+          </span>
+          <div class="room-schedules-container">
+            <a mat-button *ngFor="let slot of movieProgram.slots" class="room-schedule-button"
+               [disabled]="slot.reservations.length == slot.room.roomPlan.seats.length"
+               [routerLink]="'/movies/tickets/' + slot.id">
+              <span class="room-schedule-button-content-container">
+                <h5 style="margin: 0px;" *ngIf="selectedLocationId == 0">{{slot.location.name}}</h5>
+                <span>
+                  <label>{{slot.start | date:'HH:mm'}}</label>
+                  <mat-icon [ngClass]="slot.reservations.length == slot.room.roomPlan.seats.length ? 'gray-color' : 'green-color'"
+                   class="schedule-reservation-icon">confirmation_number
+                  </mat-icon>
+                </span>
+                <label style="margin: -8px 0;">{{slot.room.name}}</label>
+                <label class="gray-color" style="margin-top: -8px; font-weight: bold;">{{slot.room.technology.name}}</label>
+              </span>
+            </a>
+          </div>
+       </span>
+      </span>
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,4 @@
+import { ScheduleSlot } from './../../shared/model/schedule-slot';
 import { RoomScheduleSlot } from './../../shared/model/room-schedule-slot';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -24,8 +25,15 @@ export class ScheduleService {
     }));
   }
 
+  public getScheduleSlotById(slotId: number): Observable<ScheduleSlot> {
+    return this.httpClient.get(this.hostName + '/getscheduleslotbyid?id=' + slotId)
+    .pipe(map((result: ScheduleSlot) => {
+      return result;
+    }));
+  }
+
   public generateSchedule(writeToDatabase: boolean): Observable<number> {
-    return this.httpClient.get(this.hostName + '/generateSchedule?writeToDatabase=' + writeToDatabase)
+    return this.httpClient.get(this.hostName + '/generateschedule?writeToDatabase=' + writeToDatabase)
     .pipe(map((result: number) => {
       return result;
     }));

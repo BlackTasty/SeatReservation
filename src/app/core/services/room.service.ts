@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { RoomPlan } from 'src/app/shared/model/room-plan';
 import { Schedule } from 'src/app/shared/model/schedule';
 import { Room } from 'src/app/shared/model/room';
+import { RoomTechnology } from 'src/app/shared/model/room-technology';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,13 @@ export class RoomService {
   public getSchedule(roomId: number): Observable<Schedule> {
     return this.httpClient.get(this.hostName + '/getschedule?roomId=' + roomId)
     .pipe(map((result: Schedule) => {
+      return result;
+    }));
+  }
+
+  public getRoomByScheduleId(scheduleId: number): Observable<Room> {
+    return this.httpClient.get(this.hostName + '/getroombyscheduleid?id=' + scheduleId)
+    .pipe(map((result: Room) => {
       return result;
     }));
   }
@@ -77,6 +85,20 @@ export class RoomService {
   public setOpenStatus(roomId: number, isOpen: boolean): Observable<boolean> {
     return this.httpClient.get(this.hostName + '/setopenstatus?roomId=' + roomId + '&isOpen=' + isOpen)
     .pipe(map((result: boolean) => {
+      return result;
+    }));
+  }
+
+  public getTechnologies(): Observable<RoomTechnology[]> {
+    return this.httpClient.get(this.hostName + '/gettechnologies')
+    .pipe(map((result: RoomTechnology[]) => {
+      return result;
+    }));
+  }
+
+  public getTechnologyById(technologyId: number): Observable<RoomTechnology> {
+    return this.httpClient.get(this.hostName + '/gettechnologybyid?id=' + technologyId)
+    .pipe(map((result: RoomTechnology) => {
       return result;
     }));
   }

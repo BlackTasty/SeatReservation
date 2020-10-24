@@ -6,12 +6,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from 'src/app/core/authentication/authGuard';
 import { MovieDetailsComponent } from './movie-details/movie-details.component';
 import { MovieScheduleComponent } from './movie-details/movie-schedule/movie-schedule.component';
+import { ReservationComponent } from './reservation/reservation.component';
 
 const routes: Routes = [
   { path: '', component: MoviesComponent },
-  { path: 'results', component: SearchResultsComponent },
-  { path: 'details', component: MovieDetailsComponent },
-  { path: 'schedule', component: MovieScheduleComponent }
+  { path: 'details/:movieid', component: MovieDetailsComponent },
+  { path: 'tickets/:slotid', component: ReservationComponent },
+  { path: 'schedule', component: SearchResultsComponent }
 ];
 
 @NgModule({

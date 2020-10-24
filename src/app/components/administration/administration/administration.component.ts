@@ -13,7 +13,8 @@ export class AdministrationComponent implements OnInit {
   @ViewChild(MatTabGroup) matTab: MatTabGroup;
 
   constructor(public authenticationService: AuthenticationService,
-              public titleService: TitleService, private activatedRoute: ActivatedRoute) {
+              public titleService: TitleService,
+              private activatedRoute: ActivatedRoute) {
     titleService.setToolbarTitle('Administration', true);
     authenticationService.checkLoggedIn();
   }

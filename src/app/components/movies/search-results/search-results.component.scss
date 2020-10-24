@@ -1,0 +1,54 @@
+@media only screen and (max-width: 1160px) {
+  .room-schedules-container {
+    flex-wrap: wrap;
+    margin-left: 8px;
+  }
+
+  .movie-base-container {
+    flex-direction: column;
+  }
+
+  .movie-description {
+    display: none;
+  }
+}
+
+.room-schedules-container {
+  display: flex;
+}
+
+.room-schedule-button {
+  margin-right: 48px;
+  align-self: flex-start;
+}
+
+.room-schedule-button-content-container {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.schedule-reservation-icon {
+  vertical-align: middle;
+  margin-left: 4px;
+  height: 24px;
+  width: 24px;
+}
+
+.movie-info-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 24px;
+  width: 280px;
+  min-width: 280px;
+  margin-right: 12px;
+}
+
+.movie-base-container {
+  display: flex;
+}
+
+.movie-description {
+  color: gainsboro;
+  font-size: .95rem;
+}

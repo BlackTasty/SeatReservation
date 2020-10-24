@@ -40,7 +40,7 @@ export class DialogCreateEditRoomComponent implements OnInit {
     if (!!data) {
       this.isEdit = data.isEdit;
 
-      this.room = this.isEdit ? data.room : new Room(0, '', 0, new Schedule(0, []), 0, this.roomPlan, false);
+      this.room = this.isEdit ? data.room : new Room(0, '', 0, new Schedule(0, []), 0, this.roomPlan, false, 1);
     }
 
   }

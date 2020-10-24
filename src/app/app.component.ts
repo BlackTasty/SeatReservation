@@ -42,6 +42,8 @@ export class AppComponent implements OnInit {
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/theater.svg'));
     this.matIconRegistry.addSvgIcon('calendar_clock',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/calendar-clock.svg'));
+    this.matIconRegistry.addSvgIcon('timeline_clock',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/timeline-clock-outline.svg'));
 
     authenticationService.checkLoggedIn();
     this.loadLocations();

@@ -5,6 +5,7 @@ export class SeatType {
               public name: string,
               public seatImage: string,
               public seatCount: number,
+              public basePrice: number,
               public position: SeatPosition) {
 
   }

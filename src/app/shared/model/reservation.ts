@@ -8,7 +8,9 @@ export class Reservation {
               public scheduleSlotId: number,
               public roomId: number,
               public reservationStatus: ReservationStatus,
-              public bookingDate: Date) {
+              public bookingDate: Date,
+              public userId: number,
+              public email: string) {
 
               }
 }
