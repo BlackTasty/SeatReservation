@@ -17,6 +17,7 @@ import { Room } from 'src/app/shared/model/room';
 import { SeatType } from 'src/app/shared/model/seat-type';
 import { tick } from '@angular/core/src/render3';
 import { TitleService } from 'src/app/core/services/title.service';
+import { MatStepper } from '@angular/material';
 
 @Component({
   selector: 'app-reservation',
@@ -35,6 +36,7 @@ export class ReservationComponent implements OnInit {
 
   public isReservation: boolean = false;
   public paymentType: any = '0';
+  public isLoading: boolean;
 
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
@@ -104,7 +106,7 @@ export class ReservationComponent implements OnInit {
   }
 
   public onSeatClicked(selectedSeatPosition: SeatPosition) {
-    if (selectedSeatPosition.seatType.seatCount === 0) {
+    if (selectedSeatPosition.seatType.seatCount === 0 || !this.isSeatAvailable(selectedSeatPosition)) {
       return;
     }
     const ticketCount: number = this.seatsFormGroup.controls['ticketCount'].value;
@@ -166,7 +168,7 @@ export class ReservationComponent implements OnInit {
         return;
       }
 
-      if (seat.seatType.seatCount > 0) {
+      if (seat.seatType.seatCount > 0 && this.isSeatAvailable(seat)) {
         selection.push(this.selectedScheduleSlot.room.roomPlan.seats[currentSeatIndex]);
       }
 
@@ -174,29 +176,32 @@ export class ReservationComponent implements OnInit {
     }
   }
 
-  public generateReservations() {
+  public reserveTickets(stepper: MatStepper) {
+    this.generateReservations(this.authenticationService.getCurrentUserId(), null, ReservationStatus.Reserved, stepper);
+  }
+
+  public sellTickets(stepper: MatStepper) {
+    this.generateReservations(0, this.seatsFormGroup.controls['email'].value, ReservationStatus.Sold, stepper);
+  }
+
+  public isSeatAvailable(seatPosition: SeatPosition) {
+    return !this.selectedScheduleSlot.reservations.some(x => x.seatId === seatPosition.id);
+  }
+
+  private generateReservations(userId: number, email: string, reservationStatus: ReservationStatus, stepper: MatStepper) {
+    this.isLoading = true;
     const reservations: Reservation[] = [];
     this.selectedSeatPositions.forEach(seatPosition => {
-      reservations.push(new Reservation(0, seatPosition.id, this.selectedScheduleSlot, this.selectedScheduleSlot.id,
-                                        this.selectedScheduleSlot.room.id, ReservationStatus.Reserved, new Date(),
-                                        this.authenticationService.getCurrentUserId(), null));
+      reservations.push(new Reservation(0, seatPosition.id, this.selectedScheduleSlot.id,
+                                        this.selectedScheduleSlot.room.id, reservationStatus, new Date(),
+                                        userId, email, false));
     });
 
     this.reservationService.addReservation(reservations).subscribe(result => {
       if (!!result) {
-
+        stepper.next();
+        this.isLoading = false;
       }
     });
-  }
-
-  public sellTickets() {
-    const reservations: Reservation[] = [];
-    this.selectedSeatPositions.forEach(seatPosition => {
-      reservations.push(new Reservation(0, seatPosition.id, this.selectedScheduleSlot, this.selectedScheduleSlot.id,
-                                        this.selectedScheduleSlot.room.id, ReservationStatus.Sold, new Date(),
-                                        this.authenticationService.getCurrentUserId(), this.seatsFormGroup.controls['email'].value));
-    });
-
-    this.reservationService.addReservation(reservations);
   }
 }

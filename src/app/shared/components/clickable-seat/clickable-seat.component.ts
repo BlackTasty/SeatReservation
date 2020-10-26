@@ -11,6 +11,9 @@ export class ClickableSeatComponent implements OnInit {
   @Input()
   public seatPosition: SeatPosition;
 
+  @Input()
+  public isAvailable: boolean = true;
+
   @Output() seatClicked: EventEmitter<SeatPosition> = new EventEmitter();
 
   constructor(public domSanitizer: DomSanitizer) { }

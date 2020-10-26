@@ -42,7 +42,8 @@
               <label style="margin-right: 24px; align-self: center; width: 9px;">{{seatRow.row}}</label>
               <span *ngFor="let seat of seatRow.seats" style="width: 32px;"
                 [ngClass]="isSeatSelected(seat) ? 'seat-selected' : ''">
-                <app-clickable-seat [seatPosition]="seat" (seatClicked)="onSeatClicked($event)"></app-clickable-seat>
+                <app-clickable-seat [seatPosition]="seat" (seatClicked)="onSeatClicked($event)"
+                                    [isAvailable]="isSeatAvailable(seat)"></app-clickable-seat>
               </span>
             </div>
           </span>
@@ -118,7 +119,7 @@
               </li>
             </ul>
             <label class="confirmation-label" *ngIf="selectedScheduleSlot?.room?.technology.extraCharge > 0">
-              Aufpreis ({{selectedScheduleSlot?.room?.technology.name}}") pro Karte: {{selectedScheduleSlot?.room?.technology.extraCharge | currency:'EUR'}}
+              Aufpreis ({{selectedScheduleSlot?.room?.technology.name}}) pro Karte: {{selectedScheduleSlot?.room?.technology.extraCharge | currency:'EUR'}}
             </label>
             <label class="confirmation-label">
               Reihe: {{!!selectedSeatPositions && selectedSeatPositions.length > 0 ? selectedSeatPositions[0].row : ''}}
@@ -132,7 +133,7 @@
           </span>
           <span style="display: flex; flex-direction: column; flex: .6;">
             <h3>Preis</h3>
-            <h4 class="confirmation-label">{{calculatePrice() | currency:'EUR'}}</h4>
+            <h2 class="confirmation-label">{{calculatePrice() | currency:'EUR'}}</h2>
           </span>
         </span>
       </mat-card>
@@ -186,62 +187,55 @@
       </span>
       <mat-divider></mat-divider>
 
-      <span *ngIf="!isReservation" style="display: flex; margin-top: 18px;">
+      <span style="display: flex; margin-top: 18px;">
         <button mat-raised-button matStepperPrevious color="warn" style="margin-right: 8px;"
                 (click)="isReservation = true">Zurück</button>
         <span class="spacer"></span>
-        <button mat-raised-button matStepperNext color="primary" (click)="sellTickets(stepper)"
+        <button *ngIf="!isReservation" mat-raised-button matStepperNext color="primary" (click)="sellTickets(stepper)"
                 [disabled]="!paymentFormGroup.valid || !!!paymentType || paymentType == '0'">Zahlungspflichtig bestellen</button>
-      </span>
 
-      <span *ngIf="isReservation" style="display: flex; margin-top: 18px;">
-        <button mat-raised-button matStepperPrevious color="warn" style="margin-right: 8px;"
-                (click)="isReservation = true">Zurück</button>
-        <span class="spacer"></span>
-        <button mat-raised-button matStepperNext color="primary" (click)="generateReservations(stepper)"
+        <button *ngIf="isReservation" mat-raised-button matStepperNext color="primary" (click)="reserveTickets(stepper)"
                 [disabled]="!paymentFormGroup.valid">Rerservierung bestätigen</button>
       </span>
     </form>
   </mat-step>
   <mat-step #confirmationStep>
-    <form>
-      <ng-template matStepLabel>Abschließen</ng-template>
-      <h2>{{isReservation ? 'Sitzplätze wurden reserviert!' : 'Vielen Dank für Ihren Einkauf!'}}</h2>
-      <span style="display: flex;">
-        <span style="display: flex; flex-direction: column; flex: .8;">
-          <h3>Vorstellung</h3>
-          <h4 style="margin: 4px 0 4px 8px">{{selectedScheduleSlot?.movie?.title}}</h4>
-          <label class="confirmation-label">{{selectedScheduleSlot?.room?.technology.name}}</label>
-          <label class="confirmation-label">{{selectedScheduleSlot?.location?.name}}</label>
-          <label class="confirmation-label">{{selectedScheduleSlot?.start | date:'dd. MMMM yyyy'}}</label>
-          <label class="confirmation-label">{{selectedScheduleSlot?.start | date:'HH:mm'}} - {{selectedScheduleSlot?.room?.name}}</label>
-        </span>
-        <span style="display: flex; flex-direction: column; flex: 1;">
-          <h3>Karten</h3>
-          <label class="confirmation-label">Karten gesamt: {{selectedSeatPositions?.length}}</label>
-          <ul class="confirmation-label" style="padding-left: 24px;">
-            <li *ngFor="let seatPrice of generateTicketPrices()">
-              {{seatPrice.amount}}x {{seatPrice.name}} - {{(seatPrice.amount * seatPrice.price) | currency:'EUR'}}
-            </li>
-          </ul>
-          <label class="confirmation-label" *ngIf="selectedScheduleSlot?.room?.technology.extraCharge > 0">
-            Aufpreis ({{selectedScheduleSlot?.room?.technology.name}}") pro Karte: {{selectedScheduleSlot?.room?.technology.extraCharge | currency:'EUR'}}
-          </label>
-          <label class="confirmation-label">
-            Reihe: {{!!selectedSeatPositions && selectedSeatPositions.length > 0 ? selectedSeatPositions[0].row : ''}}
-          </label>
-          <label class="confirmation-label" *ngIf="selectedSeatPositions?.length == 1">
-            Sitz: {{selectedSeatPositions[0].column}}
-          </label>
-          <label class="confirmation-label" *ngIf="selectedSeatPositions?.length > 1">
-            Sitz: {{selectedSeatPositions[0].column}}-{{selectedSeatPositions[selectedSeatPositions.length - 1].column}}
-          </label>
-        </span>
-        <span style="display: flex; flex-direction: column; flex: .6;">
-          <h3>Preis</h3>
-          <h4 class="confirmation-label">{{calculatePrice() | currency:'EUR'}}</h4>
-        </span>
+    <ng-template matStepLabel>Abschließen</ng-template>
+    <h2>{{isReservation ? 'Sitzplätze wurden reserviert!' : 'Vielen Dank für Ihren Einkauf!'}}</h2>
+    <span style="display: flex;">
+      <span style="display: flex; flex-direction: column; flex: .8;">
+        <h3>Vorstellung</h3>
+        <h4 style="margin: 4px 0 4px 8px">{{selectedScheduleSlot?.movie?.title}}</h4>
+        <label class="confirmation-label">{{selectedScheduleSlot?.room?.technology.name}}</label>
+        <label class="confirmation-label">{{selectedScheduleSlot?.location?.name}}</label>
+        <label class="confirmation-label">{{selectedScheduleSlot?.start | date:'dd. MMMM yyyy'}}</label>
+        <label class="confirmation-label">{{selectedScheduleSlot?.start | date:'HH:mm'}} - {{selectedScheduleSlot?.room?.name}}</label>
       </span>
-    </form>
+      <span style="display: flex; flex-direction: column; flex: 1;">
+        <h3>Karten</h3>
+        <label class="confirmation-label">Karten gesamt: {{selectedSeatPositions?.length}}</label>
+        <ul class="confirmation-label" style="padding-left: 24px;">
+          <li *ngFor="let seatPrice of generateTicketPrices()">
+            {{seatPrice.amount}}x {{seatPrice.name}} - {{(seatPrice.amount * seatPrice.price) | currency:'EUR'}}
+          </li>
+        </ul>
+        <label class="confirmation-label" *ngIf="selectedScheduleSlot?.room?.technology.extraCharge > 0">
+          Aufpreis ({{selectedScheduleSlot?.room?.technology.name}}) pro Karte: {{selectedScheduleSlot?.room?.technology.extraCharge | currency:'EUR'}}
+        </label>
+        <label class="confirmation-label">
+          Reihe: {{!!selectedSeatPositions && selectedSeatPositions.length > 0 ? selectedSeatPositions[0].row : ''}}
+        </label>
+        <label class="confirmation-label" *ngIf="selectedSeatPositions?.length == 1">
+          Sitz: {{selectedSeatPositions[0].column}}
+        </label>
+        <label class="confirmation-label" *ngIf="selectedSeatPositions?.length > 1">
+          Sitz: {{selectedSeatPositions[0].column}}-{{selectedSeatPositions[selectedSeatPositions.length - 1].column}}
+        </label>
+      </span>
+      <span style="display: flex; flex-direction: column; flex: .6;">
+        <h3>Preis</h3>
+        <h2 class="confirmation-label">{{calculatePrice() | currency:'EUR'}}</h2>
+      </span>
+    </span>
   </mat-step>
 </mat-horizontal-stepper>

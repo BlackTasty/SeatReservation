@@ -12,7 +12,7 @@ export class ReservationService {
   private hostName;
 
   constructor(private httpClient: HttpClient) {
-    this.hostName = host + '/room';
+    this.hostName = host + '/reservation';
   }
 
   public getReservations(): Observable<Reservation[]> {
@@ -30,7 +30,7 @@ export class ReservationService {
   }
 
   public addReservation(reservations: Reservation[]): Observable<boolean> {
-    return this.httpClient.post(this.hostName + '/addReservation', reservations)
+    return this.httpClient.post(this.hostName + '/addreservation', reservations)
       .pipe(map((result: boolean) => {
         return result;
       }));
