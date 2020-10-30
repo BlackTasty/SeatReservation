@@ -1,3 +1,4 @@
+import { ControlsModule } from './../../controls.module';
 import { ClickableSeatComponent } from './../../shared/components/clickable-seat/clickable-seat.component';
 import { PipesModule } from './../../pipes.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,7 +35,6 @@ import { DialogCreateEditLocationComponent } from './administration/location-adm
     GeneralSettingsComponent,
     DialogCreateEditRoomComponent,
     DialogRemoveRoomComponent,
-    ClickableSeatComponent,
     DialogScheduleMovieComponent,
     MovieRevenueChartComponent,
     LocationAdministrationComponent,
@@ -48,7 +48,8 @@ import { DialogCreateEditLocationComponent } from './administration/location-adm
     MatNativeDateModule,
     AdministrationRoutingModule,
     PipesModule,
-    NgxEchartsModule
+    NgxEchartsModule,
+    ControlsModule
   ],
   entryComponents: [
     DialogArchiveMovieComponent,

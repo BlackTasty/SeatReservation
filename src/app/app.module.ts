@@ -1,3 +1,4 @@
+import { ControlsModule } from './controls.module';
 import { MaterialModule } from './material.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
@@ -20,6 +21,7 @@ import { LoginComponent } from './components/login/login.component';
 
 import localeDeAt from '@angular/common/locales/de-AT';
 import { MatNativeDateModule } from '@angular/material';
+import { ClickableSeatComponent } from './shared/components/clickable-seat/clickable-seat.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { MatNativeDateModule } from '@angular/material';
     MaterialModule,
     FormsModule,
     MatNativeDateModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ControlsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

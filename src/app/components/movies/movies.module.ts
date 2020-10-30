@@ -1,3 +1,4 @@
+import { ControlsModule } from './../../controls.module';
 import { MoviesRoutingModule } from './movies-routing.module';
 import { MoviesComponent } from './movies.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +18,6 @@ import { ClickableSeatComponent } from 'src/app/shared/components/clickable-seat
     MovieDetailsComponent,
     MovieScheduleComponent,
     SearchResultsComponent,
-    ClickableSeatComponent,
     ReservationComponent
   ],
   imports: [
@@ -25,7 +25,8 @@ import { ClickableSeatComponent } from 'src/app/shared/components/clickable-seat
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    MoviesRoutingModule
+    MoviesRoutingModule,
+    ControlsModule
   ],
   entryComponents: [
   ]
