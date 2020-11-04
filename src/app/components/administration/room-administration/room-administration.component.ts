@@ -6,6 +6,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Room } from 'src/app/shared/model/room';
 import { MatDialogConfig, MatPaginator, MatSort, MatDialog, MatTableDataSource, MatSlideToggleChange } from '@angular/material';
 import { DialogScheduleMovieComponent } from '../schedule/dialogs/dialog-schedule-movie/dialog-schedule-movie.component';
+import { RoomTechnology } from 'src/app/shared/model/room-technology';
 
 @Component({
   selector: 'app-room-administration',

@@ -35,7 +35,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
   public pendingMovies: MatTableDataSource<ScheduleSlot>;
   public displayedPendingColumns = [ 'room', 'title', 'remainingTime', 'openSeats'];
   public runningMovies: MatTableDataSource<ScheduleSlot>;
-  public displayedRunningColumns = [ 'room', 'title', 'remainingTime'];
+  public displayedRunningColumns = [ 'room', 'title', 'remainingTime', 'openSeats'];
 
   private refreshTimer;
   private chartIndicator: am4charts.DateAxisDataItem;
@@ -177,6 +177,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
           if (scheduleOfDay.length > 0) {
             scheduleOfDay.forEach(scheduleSlot => {
               scheduleSlot.scheduleId = room.scheduleId;
+              scheduleSlot.room = room;
               data.push({
                 category: room.name,
                 start: moment(scheduleSlot.start).format('YYYY-MM-DD HH:mm'),
@@ -260,6 +261,14 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public getRoomForScheduleSlot(scheduleSlot: ScheduleSlot) {
     return this.rooms.find(x => x.scheduleId === scheduleSlot.scheduleId);
+  }
+
+  public getOpenSeats(scheduleSlot: ScheduleSlot) {
+    if (!!scheduleSlot && !!scheduleSlot.room && !!scheduleSlot.room.roomPlan){
+      return this.getSeatCountForRoom(scheduleSlot.room) - scheduleSlot.reservations.length;
+    } else {
+      return 0;
+    }
   }
 
   private refreshPendingAndRunningMoviesCount() {

@@ -10,6 +10,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatSelectChange } from '@angular/material';
 import { SeatRow } from '../../model/seat-row';
 import { SeatType } from 'src/app/shared/model/seat-type';
+import { RoomTechnology } from 'src/app/shared/model/room-technology';
 
 @Component({
   selector: 'app-dialog-create-edit-room',
@@ -32,8 +33,12 @@ export class DialogCreateEditRoomComponent implements OnInit {
   private oldRowCount: number = 0;
   private oldColumnCount: number = 0;
 
+  public technologies: RoomTechnology[] = [];
+  public selectedTechnologyId: number;
+
   constructor(private dialogRef: MatDialogRef<DialogCreateEditRoomComponent>,
               private scheduleService: ScheduleService,
+              private roomService: RoomService,
               private seatTypeService: SeatTypeService,
               public domSanitizer: DomSanitizer,
               @Inject(MAT_DIALOG_DATA) data) {
@@ -46,6 +51,12 @@ export class DialogCreateEditRoomComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.roomService.getTechnologies().subscribe(technologies => {
+      this.technologies = technologies;
+
+      this.selectedTechnologyId = this.room.technologyId;
+    });
+
     this.scheduleService.getSchedules().subscribe(schedules => {
       this.schedules = schedules;
 
@@ -102,6 +113,8 @@ export class DialogCreateEditRoomComponent implements OnInit {
 
   public onConfirmClicked(): void {
     const seats: SeatPosition[] = [];
+    this.room.technologyId = this.selectedTechnologyId;
+    this.room.technology = this.technologies.find(x => x.id === this.selectedTechnologyId);
 
     this.seatRows.forEach(seatRow => {
       seatRow.seats.forEach(seat => {
