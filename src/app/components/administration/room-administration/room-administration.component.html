@@ -4,9 +4,8 @@
     Kinosaal hinzufügen
   </button>
   <span style="flex: 1"></span>
-  <button mat-raised-button color="primary" style="margin: 8px 0" (click)="loadRooms()">
-    <mat-icon class="icon-margin">refresh</mat-icon>
-    Aktualisieren
+  <button mat-mini-fab class="mat-elevation-z2" color="primary" style="margin: 8px 0" (click)="loadRooms()">
+    <mat-icon>refresh</mat-icon>
   </button>
 </span>
 <mat-table matSort [dataSource]="rooms">

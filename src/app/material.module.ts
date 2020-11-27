@@ -3,7 +3,7 @@ import {
   MatButtonModule, MatTreeModule, MatDividerModule, MatSidenavModule, MatExpansionModule, MatIconModule,
   MatToolbarModule, MatDialogModule, MatTooltipModule, MatSelectModule, MatTableModule, MatTabsModule,
   MatCheckboxModule, MatProgressBarModule, MatSortModule, MatPaginatorModule, MatRadioModule, MatSlideToggleModule,
-  MatMenuModule, MatSnackBarModule, MatPaginatorIntl, MatProgressSpinnerModule, MatTree, MatDatepickerModule, MatStepperModule
+  MatMenuModule, MatSnackBarModule, MatPaginatorIntl, MatProgressSpinnerModule, MatTree, MatDatepickerModule, MatStepperModule, MatChipsModule, MatAutocompleteModule
 } from '@angular/material';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -43,7 +43,9 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     MatButtonModule,
     MatDatepickerModule,
     MatStepperModule,
-    CarouselModule
+    CarouselModule,
+    MatChipsModule,
+    MatAutocompleteModule
   ],
   exports: [
     MatInputModule,
@@ -73,7 +75,9 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     MatButtonModule,
     MatDatepickerModule,
     MatStepperModule,
-    CarouselModule
+    CarouselModule,
+    MatChipsModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule { }

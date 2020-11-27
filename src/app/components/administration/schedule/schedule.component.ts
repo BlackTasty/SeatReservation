@@ -4,7 +4,6 @@ import { ScheduleSlot } from './../../../shared/model/schedule-slot';
 import { RoomService } from './../../../core/services/room.service';
 import { Component, OnInit, NgZone, AfterViewInit, OnDestroy, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { EChartOption } from 'echarts';
 import * as moment from 'moment';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
@@ -13,6 +12,7 @@ import { MatDialogConfig, MatDialog, MatTableDataSource } from '@angular/materia
 import { DialogScheduleMovieComponent } from './dialogs/dialog-schedule-movie/dialog-schedule-movie.component';
 import { Room } from 'src/app/shared/model/room';
 import { Movie } from 'src/app/shared/model/movie';
+import { DialogCopyScheduleComponent } from './dialogs/dialog-copy-schedule/dialog-copy-schedule.component';
 
 am4core.useTheme(am4themes_animated);
 
@@ -225,6 +225,25 @@ export class ScheduleComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     const dialogRef = this.dialog.open(DialogScheduleMovieComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (!!result) {
+          this.refreshChart();
+        }
+      }
+    );
+  }
+
+  public onCopySchedule() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      sourceDate: this.scheduleDate.value
+    };
+
+    const dialogRef = this.dialog.open(DialogCopyScheduleComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
       result => {

@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { host } from './host';
 import { Movie } from 'src/app/shared/model/movie';
 import { map } from 'rxjs/operators';
+import { Person } from 'src/app/shared/model/person';
+import { Studio } from 'src/app/shared/model/studio';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,13 @@ export class MovieService {
   public getMovies(showArchived: boolean): Observable<Movie[]> {
     return this.httpClient.get(this.hostName + '/getmovies?showArchived=' + showArchived)
     .pipe(map((result: Movie[]) => {
+      return result;
+    }));
+  }
+
+  public getMovieById(movieId: number): Observable<Movie> {
+    return this.httpClient.get(this.hostName + '/getmoviebyid?id=' + movieId)
+    .pipe(map((result: Movie) => {
       return result;
     }));
   }
@@ -68,6 +77,34 @@ export class MovieService {
   public updateMovie(movie: Movie): Observable<boolean> {
     return this.httpClient.post(this.hostName + '/updatemovie', movie)
     .pipe(map((result: boolean) => {
+      return result;
+    }));
+  }
+
+  public addPerson(person: Person): Observable<boolean> {
+    return this.httpClient.post(this.hostName + '/addperson', person)
+    .pipe(map((result: boolean) => {
+      return result;
+    }));
+  }
+
+  public addStudio(studio: Studio): Observable<boolean> {
+    return this.httpClient.post(this.hostName + '/addstudio', studio)
+    .pipe(map((result: boolean) => {
+      return result;
+    }));
+  }
+
+  public getPeople(): Observable<Person[]> {
+    return this.httpClient.get(this.hostName + '/getpeople')
+    .pipe(map((result: Person[]) => {
+      return result;
+    }));
+  }
+
+  public getStudios(): Observable<Studio[]> {
+    return this.httpClient.get(this.hostName + '/getstudios')
+    .pipe(map((result: Studio[]) => {
       return result;
     }));
   }

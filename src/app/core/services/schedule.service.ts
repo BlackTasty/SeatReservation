@@ -1,3 +1,4 @@
+import { ScheduleCopyTarget } from './../../shared/model/schedule-copy-target';
 import { ScheduleSlot } from './../../shared/model/schedule-slot';
 import { RoomScheduleSlot } from './../../shared/model/room-schedule-slot';
 import { Injectable } from '@angular/core';
@@ -55,6 +56,20 @@ export class ScheduleService {
 
   public removeScheduledMovie(roomId: number, scheduleSlotId: number): Observable<boolean> {
     return this.httpClient.get(this.hostName + '/removescheduledmovie?roomId=' + roomId + '&scheduleSlotId=' + scheduleSlotId)
+    .pipe(map((result: boolean) => {
+      return result;
+    }));
+  }
+
+  public getDatesWithMovies(): Observable<Date[]> {
+    return this.httpClient.get(this.hostName + '/getdateswithmovies')
+    .pipe(map((result: Date[]) => {
+      return result;
+    }));
+  }
+
+  public copySchedule(scheduleCopyTarget: ScheduleCopyTarget): Observable<boolean> {
+    return this.httpClient.post(this.hostName + '/copyschedule', scheduleCopyTarget)
     .pipe(map((result: boolean) => {
       return result;
     }));

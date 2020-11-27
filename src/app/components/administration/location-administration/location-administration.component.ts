@@ -1,6 +1,6 @@
-import { Location } from './../../../../shared/model/location';
+import { Location } from './../../../shared/model/location';
 import { DomSanitizer } from '@angular/platform-browser';
-import { LocationService } from './../../../../core/services/location.service';
+import { LocationService } from './../../../core/services/location.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource, MatDialogConfig } from '@angular/material';
 import { DialogCreateEditLocationComponent } from './dialog-create-edit-location/dialog-create-edit-location.component';

@@ -1,3 +1,39 @@
-<p>
-  movie-details works!
-</p>
+<div style="display: flex; flex-direction: column;">
+  <h2 style="margin: 0;">{{movie?.title}}</h2>
+  <span style="display: flex; margin: 16px 0;">
+    <span style="display: flex; align-self: center;">
+      <img [src]="domSanitizer.bypassSecurityTrustUrl(movie?.poster)"
+           style="height: 320px; width: 219px;"/>
+      <span style="display: flex; margin-left: 48px;">
+        <span style="display: flex; flex-direction: column;">
+          <label class="gray-color movie-detail">Veröffentlichung: </label>
+          <label class="gray-color movie-detail">Filmlänge: </label>
+          <label class="gray-color movie-detail">Genre: </label>
+          <label class="gray-color movie-detail">Regie: </label>
+          <label class="gray-color movie-detail">Darsteller: </label>
+          <label class="gray-color movie-detail">Studio: </label>
+        </span>
+        <span style="display: flex; flex-direction: column; margin-left: 16px;">
+          <label class="movie-detail">{{movie?.releaseDate | date: 'dd.MM.yyyy'}}</label>
+          <label class="movie-detail">{{movie?.movieLength}} Minuten</label>
+          <label class="movie-detail">{{getGenres()}}</label>
+          <label class="movie-detail">{{getDirectors()}}</label>
+          <label class="movie-detail">{{getActors()}}</label>
+          <label class="movie-detail">{{getStudios()}}</label>
+        </span>
+      </span>
+    </span>
+    <span class="spacer"></span>
+    <!--<mat-divider></mat-divider>-->
+    <span style="display: flex; flex-direction: column;" *ngIf="!!movie?.trailer && movie?.trailer.trim() !== ''">
+      <iframe *ngIf="!isYoutubeVideo" [src]='domSanitizer.bypassSecurityTrustResourceUrl(movie.trailer)'
+              frameborder="0" allowfullscreen style="align-self: center;"></iframe>
+      <youtube-player [videoId]="youtubeVideoId" style="align-self: center;"></youtube-player>
+    </span>
+  </span>
+  <mat-divider></mat-divider>
+  <h2>Inhalt</h2>
+  <div class="text-two-columns" style="margin-bottom: 32px;">
+    <p style="margin-top: 0;">{{movie?.description}}</p>
+  </div>
+</div>

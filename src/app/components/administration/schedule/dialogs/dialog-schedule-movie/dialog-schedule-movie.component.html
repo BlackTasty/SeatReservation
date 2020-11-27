@@ -10,8 +10,19 @@
       </mat-form-field>
       <mat-form-field>
         <mat-select [(value)]="selectedRoomId" placeholder="Raum" (selectionChange)="onRoomChanged()">
-          <mat-option *ngFor="let room of rooms" [value]="room.id">{{room.name}}</mat-option>
+          <mat-select-trigger>
+            <mat-icon *ngIf="!selectedRoom?.isOpen" class="icon-margin" color="warn"
+                      style="font-size: 18px; height: 18px; width: 18px; vertical-align: text-top;">
+              no_meeting_room
+            </mat-icon>
+            <label>{{selectedRoom?.name}}</label>
+          </mat-select-trigger>
+          <mat-option *ngFor="let room of rooms" [value]="room.id">
+            <mat-icon *ngIf="!room.isOpen" class="icon-margin" color="warn">no_meeting_room</mat-icon>
+            {{room.name}}
+          </mat-option>
         </mat-select>
+        <mat-hint *ngIf="!!selectedRoom && !selectedRoom.isOpen" style="color: #f44336;">Der ausgewählte Raum ist derzeit geschlossen und wird Benutzern nicht angezeigt!</mat-hint>
       </mat-form-field>
       <span style="display: flex;">
         <mat-form-field color="accent" style="width: 150px; margin-right: 8px;">

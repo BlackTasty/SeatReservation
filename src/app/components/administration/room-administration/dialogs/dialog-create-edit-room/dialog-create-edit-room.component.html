@@ -12,11 +12,6 @@
       <mat-form-field>
         <input matInput placeholder="Name" [(ngModel)]="room.name" required>
       </mat-form-field>
-      <mat-form-field>
-        <mat-select placeholder="Name" [(ngModel)]="room.name" required>
-          <mat-option *ngFor="let technology of technologies" [value]="technology.id">{{technology.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
       <span class="spacer"></span>
       <span>
         <mat-form-field *ngIf="isLoaded" style="margin-left: 8px;" color="accent">
@@ -33,6 +28,11 @@
         </mat-form-field>
       </span>
     </div>
+    <mat-form-field style="display: block;">
+      <mat-select placeholder="Technologie" [(ngModel)]="selectedTechnologyId" required>
+        <mat-option *ngFor="let technology of technologies" [value]="technology.id">{{technology.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-expansion-panel style="margin-bottom: 8px">
       <mat-expansion-panel-header>
         <mat-panel-title>

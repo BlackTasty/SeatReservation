@@ -32,6 +32,7 @@ export class DialogScheduleMovieComponent implements OnInit, AfterViewInit, OnDe
 
   public selectedMovieId: number;
   public selectedRoomId: number;
+  public selectedRoom: Room;
   public startTime: string;
   public date = new FormControl(new Date());
 
@@ -140,6 +141,22 @@ export class DialogScheduleMovieComponent implements OnInit, AfterViewInit, OnDe
         this.chart.dispose();
       }
     });
+  }
+
+  public isSelectedRoomOpen(): boolean {
+    if (!!this.selectedRoomId && this.selectedRoomId >= 0) {
+      return this.rooms.find(x => x.id === this.selectedRoomId).isOpen;
+    }
+
+    return true;
+  }
+
+  public getSelectedRoomName(): string {
+    if (!!this.selectedRoomId && this.selectedRoomId >= 0) {
+      return this.rooms.find(x => x.id === this.selectedRoomId).name;
+    }
+
+    return '';
   }
 
   public refreshChart() {
@@ -296,6 +313,9 @@ export class DialogScheduleMovieComponent implements OnInit, AfterViewInit, OnDe
   public onRoomChanged() {
     this.isOverlapError = false;
     this.refreshChart();
+    if (this.selectedRoomId > -1) {
+      this.selectedRoom = this.rooms.find(x => x.id === this.selectedRoomId);
+    }
   }
 
   public onDateTimeChanged() {

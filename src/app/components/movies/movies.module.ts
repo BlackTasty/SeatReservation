@@ -8,15 +8,14 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material.module';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import { MovieDetailsComponent } from './movie-details/movie-details.component';
-import { MovieScheduleComponent } from './movie-details/movie-schedule/movie-schedule.component';
 import { ReservationComponent } from './reservation/reservation.component';
 import { ClickableSeatComponent } from 'src/app/shared/components/clickable-seat/clickable-seat.component';
+import { YouTubePlayerModule } from '@angular/youtube-player';
 
 @NgModule({
   declarations: [
     MoviesComponent,
     MovieDetailsComponent,
-    MovieScheduleComponent,
     SearchResultsComponent,
     ReservationComponent
   ],
@@ -26,7 +25,8 @@ import { ClickableSeatComponent } from 'src/app/shared/components/clickable-seat
     FormsModule,
     ReactiveFormsModule,
     MoviesRoutingModule,
-    ControlsModule
+    ControlsModule,
+    YouTubePlayerModule
   ],
   entryComponents: [
   ]

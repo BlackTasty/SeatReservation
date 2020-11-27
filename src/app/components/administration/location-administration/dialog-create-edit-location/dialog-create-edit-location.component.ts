@@ -1,5 +1,5 @@
-import { Location } from './../../../../../shared/model/location';
-import { LocationService } from './../../../../../core/services/location.service';
+import { Location } from './../../../../shared/model/location';
+import { LocationService } from './../../../../core/services/location.service';
 import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Room } from 'src/app/shared/model/room';

@@ -37,24 +37,65 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Grafiken
+            Mitwirkende
           </mat-panel-title>
           <mat-panel-description>
-            Poster, Banner, Logo und Trailer setzen
+            Studio, Regie und Darsteller setzen
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div>
           <mat-form-field class="stretch-width">
-            <input matInput placeholder="Poster (Hochformat)" [(ngModel)]="movie.poster" required>
+            <mat-chip-list #studioList>
+              <mat-chip *ngFor="let studio of movie.studios" [removable]="true" (removed)="removeStudio(studio)"
+                        style="background-color: #7b1fa2" [selectable]="false">
+                {{studio.name}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input #studioInput placeholder="Studios" [matAutocomplete]="autoStudio" [matChipInputFor]="studioList"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     (matChipInputTokenEnd)="addStudio($event)" (input)="onStudioInputChanged($event.target.value)">
+            </mat-chip-list>
+            <mat-autocomplete #autoStudio="matAutocomplete" (optionSelected)="studioSelected($event)">
+              <mat-option *ngFor="let studio of filteredStudios" [value]="studio">
+                {{studio.name}}
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
+
           <mat-form-field class="stretch-width">
-            <input matInput placeholder="Banner (Querformat)" [(ngModel)]="movie.banner" required>
+            <mat-chip-list #directorsList>
+              <mat-chip *ngFor="let director of movie.directors" [removable]="true" (removed)="removePerson(director, true)"
+                        style="background-color: #7b1fa2" [selectable]="false">
+                {{director.name}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input #directorsInput placeholder="Regie" [matAutocomplete]="autoDirector" [matChipInputFor]="directorsList"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     (matChipInputTokenEnd)="addDirector($event)" (input)="onPersonInputChanged($event.target.value)">
+            </mat-chip-list>
+            <mat-autocomplete #autoDirector="matAutocomplete" (optionSelected)="personSelected($event, true)">
+              <mat-option *ngFor="let person of filteredPeople" [value]="person">
+                {{person.name}}
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
+
           <mat-form-field class="stretch-width">
-            <input matInput placeholder="Logo" [(ngModel)]="movie.logo" required>
-          </mat-form-field>
-          <mat-form-field class="stretch-width">
-            <input matInput placeholder="Trailer" [(ngModel)]="movie.trailer" required>
+            <mat-chip-list #actorsList>
+              <mat-chip *ngFor="let actor of movie.actors" [removable]="true" (removed)="removePerson(actor, false)"
+                        style="background-color: #7b1fa2" [selectable]="false">
+                {{actor.name}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input #actorsInput placeholder="Darsteller" [matAutocomplete]="autoActor" [matChipInputFor]="actorsList"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     (matChipInputTokenEnd)="addActor($event)" (input)="onPersonInputChanged($event.target.value)">
+            </mat-chip-list>
+            <mat-autocomplete #autoActor="matAutocomplete" (optionSelected)="personSelected($event, false)">
+              <mat-option *ngFor="let person of filteredPeople" [value]="person">
+                {{person.name}}
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
         </div>
       </mat-expansion-panel>
@@ -84,6 +125,30 @@
             <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
           </mat-table>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Grafiken
+          </mat-panel-title>
+          <mat-panel-description>
+            Poster, Banner, Logo und Trailer setzen
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div>
+          <mat-form-field class="stretch-width">
+            <input matInput placeholder="Poster (Hochformat)" [(ngModel)]="movie.poster" required>
+          </mat-form-field>
+          <mat-form-field class="stretch-width">
+            <input matInput placeholder="Banner (Querformat)" [(ngModel)]="movie.banner" required>
+          </mat-form-field>
+          <mat-form-field class="stretch-width">
+            <input matInput placeholder="Logo" [(ngModel)]="movie.logo" required>
+          </mat-form-field>
+          <mat-form-field class="stretch-width">
+            <input matInput placeholder="Trailer" [(ngModel)]="movie.trailer" required>
+          </mat-form-field>
         </div>
       </mat-expansion-panel>
     </mat-accordion>

@@ -1,3 +1,4 @@
+import { ScheduleService } from './../../../core/services/schedule.service';
 import { TitleService } from 'src/app/core/services/title.service';
 import { ScheduleSlot } from './../../../shared/model/schedule-slot';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -28,6 +29,7 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
 
   public name: string;
   public selectedDate: Date;
+  public highlightedScheduleDates: string[] = [];
 
   public cinemaProgram: CinemaProgram[] = [];
 
@@ -35,6 +37,7 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
               private movieService: MovieService,
               private roomService: RoomService,
               private titleService: TitleService,
+              private scheduleService: ScheduleService,
               public domSanitizer: DomSanitizer) {
     titleService.setToolbarTitle('Kinoprogramm', true);
     locationService.getLocations(false).subscribe(locations => {
@@ -51,6 +54,15 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
       this.genres = genres;
     });
 
+    scheduleService.getDatesWithMovies().subscribe(dates => {
+      const enabledDates: string[] = [];
+      dates.forEach(date => {
+        enabledDates.push(new Date(date).toLocaleDateString());
+      });
+
+      this.highlightedScheduleDates = enabledDates;
+    });
+
     this.selectedDate = new Date();
   }
 
@@ -59,6 +71,36 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
   }
+
+  /*public highlightedDates = (d: Date) => {
+    this.highlightedScheduleDates.forEach(date => {
+      if (date.getDate() === d.getDate() &&
+          date.getMonth() === d.getMonth() &&
+          date.getFullYear() === d.getFullYear()) {
+        return 'scheduled-date';
+      }
+    });
+    return undefined;
+  }*/
+
+  public validateDate = (d: Date): boolean => {
+    const date = d.toLocaleDateString();
+    return this.highlightedScheduleDates.includes(date);
+  }
+
+ /* public validateDate: (d: Date) => boolean =
+    (d: Date) => {
+      return d.getDate() % 2 === 0;
+
+
+      return !!this.highlightedScheduleDates.find(x => x.toLocaleDateString() === d.toLocaleDateString());
+      this.highlightedScheduleDates.forEach(date => {
+        if (d.toLocaleDateString() === date.toLocaleDateString()) {
+          return true;
+        }
+      });
+      return false;
+  }*/
 
   public onLocationSelected() {
     this.refreshSchedule();
@@ -81,22 +123,24 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
                                    this.selectedDate.getDate(), 23, 59, 59);
 
     location.rooms.forEach(room => {
-      const daySchedule = room.schedule.movieSchedule.filter(x => moment(x.start).isBetween(filterDateStart, filterDateEnd));
+      if (room.isOpen) {
+        const daySchedule = room.schedule.movieSchedule.filter(x => moment(x.start).isBetween(filterDateStart, filterDateEnd));
 
-      daySchedule.forEach(scheduleSlot => {
-        scheduleSlot.room = room;
-        scheduleSlot.location = location;
+        daySchedule.forEach(scheduleSlot => {
+          scheduleSlot.room = room;
+          scheduleSlot.location = location;
 
-        const movie = scheduleSlot.movie;
-        const movieProgram = cinemaProgram.find(x => x.movie.id === movie.id);
-        if (!!movieProgram) {
-          movieProgram.slots.push(scheduleSlot);
-        } else {
-          const slot: ScheduleSlot[] = [];
-          slot.push(scheduleSlot);
-          cinemaProgram.push(new CinemaProgram(movie, slot));
-        }
-      });
+          const movie = scheduleSlot.movie;
+          const movieProgram = cinemaProgram.find(x => x.movie.id === movie.id);
+          if (!!movieProgram) {
+            movieProgram.slots.push(scheduleSlot);
+          } else {
+            const slot: ScheduleSlot[] = [];
+            slot.push(scheduleSlot);
+            cinemaProgram.push(new CinemaProgram(movie, slot));
+          }
+        });
+      }
     });
 
     return cinemaProgram;
@@ -112,6 +156,10 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
         this.locations.forEach(location => {
           this.getCinemaProgramForLocation(location, cinemaProgram);
         });
+      }
+
+      if (this.selectedGenreId > 0) {
+        cinemaProgram = cinemaProgram.filter(x => x.movie.genres.some(y => y.id === this.selectedGenreId));
       }
 
       // First sort by movie title

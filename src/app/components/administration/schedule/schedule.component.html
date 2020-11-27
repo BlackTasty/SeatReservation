@@ -4,6 +4,10 @@
       <mat-icon class="icon-margin" svgIcon="calendar_clock"></mat-icon>
       Film planen
     </button>
+    <button mat-raised-button color="primary" style="margin-left: 8px;" (click)="onCopySchedule()">
+      <mat-icon class="icon-margin">content_copy</mat-icon>
+      Zeitplan kopieren
+    </button>
     <span class="spacer"></span>
     <mat-form-field color="accent">
       <mat-label>Zeitplan-Tag auswählen</mat-label>
@@ -12,9 +16,8 @@
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <mat-datepicker #datePicker></mat-datepicker>
-    <button mat-raised-button color="primary" style="margin: 8px 0" (click)="refreshChart()">
-      <mat-icon class="icon-margin">refresh</mat-icon>
-      Aktualisieren
+    <button mat-mini-fab class="mat-elevation-z2" color="primary" style="margin-left: 8px;" (click)="refreshChart()">
+      <mat-icon>refresh</mat-icon>
     </button>
   </span>
   <mat-expansion-panel>
@@ -63,10 +66,10 @@
               </mat-cell>
           </ng-container>
           <ng-container matColumnDef="openSeats">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>Freie Sitzplätze</mat-header-cell>
+            <mat-header-cell mat-sort-header *matHeaderCellDef>Freie Sitzplätze / Gesamt</mat-header-cell>
             <mat-cell *matCellDef="let scheduleSlot">
               <label>
-                {{getOpenSeats(scheduleSlot)}}
+                {{getOpenSeats(scheduleSlot)}} / {{getSeatCountForRoom(scheduleSlot.room)}}
               </label>
               </mat-cell>
           </ng-container>
@@ -102,10 +105,10 @@
               </mat-cell>
           </ng-container>
           <ng-container matColumnDef="openSeats">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>Freie Sitzplätze</mat-header-cell>
+            <mat-header-cell mat-sort-header *matHeaderCellDef>Freie Sitzplätze / Gesamt</mat-header-cell>
             <mat-cell *matCellDef="let scheduleSlot">
               <label>
-                {{getOpenSeats(scheduleSlot)}}
+                {{getOpenSeats(scheduleSlot)}} / {{getSeatCountForRoom(scheduleSlot.room)}}
               </label>
               </mat-cell>
           </ng-container>
@@ -151,11 +154,14 @@
             <span>
             <label style="font-weight: bold;">Name:</label> {{selectedScheduleSlotRoom?.name}}<br>
             </span>
-            <span style="margin: 8px 0">
-            <label style="font-weight: bold;">Sitzplätze:</label> {{getSeatCountForRoom(selectedScheduleSlotRoom)}}<br>
+            <span style="margin-top: 8px">
+            <label style="font-weight: bold;">Sitzplätze Gesamt:</label> {{getSeatCountForRoom(selectedScheduleSlotRoom)}}<br>
             </span>
-            <span>
-            <label style="font-weight: bold;">Reservierungen:</label> {{selectedScheduleSlot?.reservations?.length}}
+            <span style="margin-top: 8px">
+            <label style="font-weight: bold;">Belegte Sitzplätze:</label> {{selectedScheduleSlot?.reservations?.length}}
+            </span>
+            <span style="margin-top: 8px">
+            <label style="font-weight: bold;">Technologie:</label> {{selectedScheduleSlotRoom?.technology?.name}}
             </span>
           </div>
         </div>

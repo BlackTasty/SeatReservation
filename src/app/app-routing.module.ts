@@ -1,4 +1,3 @@
-import { MovieScheduleComponent } from './components/movies/movie-details/movie-schedule/movie-schedule.component';
 import { MovieDetailsComponent } from './components/movies/movie-details/movie-details.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './core/authentication/authGuard';

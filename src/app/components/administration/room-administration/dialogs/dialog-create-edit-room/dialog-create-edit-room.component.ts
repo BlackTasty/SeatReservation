@@ -47,7 +47,6 @@ export class DialogCreateEditRoomComponent implements OnInit {
 
       this.room = this.isEdit ? data.room : new Room(0, '', 0, new Schedule(0, []), 0, this.roomPlan, false, 1);
     }
-
   }
 
   ngOnInit() {

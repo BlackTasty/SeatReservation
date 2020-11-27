@@ -1,5 +1,7 @@
 import { Genre } from './genre';
+import { Person } from './person';
 import { ScheduleSlot } from './schedule-slot';
+import { Studio } from './studio';
 
 export class Movie {
   constructor(public id: number,
@@ -14,7 +16,10 @@ export class Movie {
               public scheduleSlots: ScheduleSlot[],
               public isArchived: boolean,
               public genres: Genre[],
-              public isFeatured: boolean) {
+              public isFeatured: boolean,
+              public directors: Person[],
+              public actors: Person[],
+              public studios: Studio[]) {
 
   }
 }
