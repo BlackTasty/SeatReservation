@@ -17,9 +17,9 @@ export class UserService {
     this.hostName = host + '/user';
   }
 
-  public add(user: User): Observable<boolean> {
+  public add(user: User): Observable<number> {
     return this.httpClient.post(this.hostName + '/add', user)
-      .pipe(map((result: boolean) => {
+      .pipe(map((result: number) => {
         return result;
       }));
   }
@@ -32,7 +32,7 @@ export class UserService {
   }
 
   public delete(userId: number): Observable<boolean> {
-    return this.httpClient.get(this.hostName + '/delete?userId=' + userId)
+    return this.httpClient.delete(this.hostName + '/delete?userId=' + userId)
       .pipe(map((result: boolean) => {
         return result;
       }));

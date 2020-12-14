@@ -41,7 +41,7 @@
       </mat-nav-list>
       <mat-nav-list style="margin-top: auto">
         <a mat-list-item routerLink="/account" [matTooltip]="isOpen ? '' : 'Account'"
-          *ngIf="authenticationService.hasPermission(6)"
+          *ngIf="authenticationService.hasPermission(7)"
           [ngClass]="{'active-link': currentRoute == '/account'}">
           <mat-icon class="sidebar-icon">person</mat-icon>
           <label *ngIf="isOpen">Account</label>

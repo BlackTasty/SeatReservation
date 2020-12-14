@@ -6,13 +6,11 @@ import { Location } from './../../../shared/model/location';
 import { RoomService } from './../../../core/services/room.service';
 import { MovieService } from './../../../core/services/movie.service';
 import { LocationService } from './../../../core/services/location.service';
-import { RoomScheduleSlot } from './../../../shared/model/room-schedule-slot';
 import { Genre } from './../../../shared/model/genre';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CinemaProgram } from '../model/cinema-program';
 import * as moment from 'moment';
-import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-results',
@@ -72,35 +70,10 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
   }
 
-  /*public highlightedDates = (d: Date) => {
-    this.highlightedScheduleDates.forEach(date => {
-      if (date.getDate() === d.getDate() &&
-          date.getMonth() === d.getMonth() &&
-          date.getFullYear() === d.getFullYear()) {
-        return 'scheduled-date';
-      }
-    });
-    return undefined;
-  }*/
-
   public validateDate = (d: Date): boolean => {
     const date = d.toLocaleDateString();
     return this.highlightedScheduleDates.includes(date);
   }
-
- /* public validateDate: (d: Date) => boolean =
-    (d: Date) => {
-      return d.getDate() % 2 === 0;
-
-
-      return !!this.highlightedScheduleDates.find(x => x.toLocaleDateString() === d.toLocaleDateString());
-      this.highlightedScheduleDates.forEach(date => {
-        if (d.toLocaleDateString() === date.toLocaleDateString()) {
-          return true;
-        }
-      });
-      return false;
-  }*/
 
   public onLocationSelected() {
     this.refreshSchedule();

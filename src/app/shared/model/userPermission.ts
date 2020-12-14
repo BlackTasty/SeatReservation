@@ -1,9 +1,7 @@
-export class UserPermission {
-  constructor(userId: number, permissions: string[]) {
-    this.userId = userId;
-    this.permissions = permissions;
-  }
+import { Permission } from './permission';
 
-  public userId: number;
-  public permissions: string[];
+export class UserPermission {
+  constructor(public userId: number,
+              public permissions: Permission[]) {
+  }
 }

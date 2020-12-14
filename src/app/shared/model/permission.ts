@@ -4,4 +4,6 @@ export class Permission {
               public id: number) {
 
   }
+
+  public checked: boolean;
 }

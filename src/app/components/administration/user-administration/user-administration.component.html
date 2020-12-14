@@ -1,0 +1,71 @@
+<span class="flex-container">
+  <button mat-raised-button color="primary" style="margin: 8px 0" (click)="showCreateEditDialog(null, false)">
+    <mat-icon class="icon-margin">add</mat-icon>
+    Benutzer hinzufügen
+  </button>
+  <span style="flex: 1"></span>
+  <button mat-mini-fab class="mat-elevation-z2" color="primary" style="margin: 8px 0" (click)="loadUsers()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</span>
+<mat-table matSort [dataSource]="users">
+  <ng-container matColumnDef="avatar">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let user">
+      <ngx-avatar size="40" [name]="user.username"></ngx-avatar>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="username">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Benutzername</mat-header-cell>
+    <mat-cell *matCellDef="let user">
+      {{user.username}}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="lastName">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Nachname</mat-header-cell>
+    <mat-cell *matCellDef="let user">
+      {{user.firstName}}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="firstName">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Vorname</mat-header-cell>
+    <mat-cell *matCellDef="let user">
+      {{user.lastName}}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="registerDate">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Registrier-Datum</mat-header-cell>
+    <mat-cell *matCellDef="let user">
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="email">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Email</mat-header-cell>
+    <mat-cell *matCellDef="let user">
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="phone">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Telefonnummer</mat-header-cell>
+    <mat-cell *matCellDef="let user">
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>Aktionen</mat-header-cell>
+    <mat-cell *matCellDef="let user">
+      <button mat-icon-button matTooltip="Bearbeiten" color="accent" class="actions-margin"
+        (click)="showCreateEditDialog(user, true)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Löschen" color="warn" class="actions-margin" [disabled]="currentUserId === user.id"
+        (click)="onRemoveUser(user.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
+<span style="display: flex; align-items: center;">
+  <span class="spacer"></span>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</span>

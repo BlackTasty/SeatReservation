@@ -1,0 +1,13 @@
+<div>
+  <h2 mat-dialog-title>{{errorTitle}}</h2>
+
+  <mat-dialog-content>
+    {{errorMessage}}
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions-container">
+    <div class="dialog-actions-content">
+      <button mat-raised-button color="accent" (click)="onConfirmClicked()">Bestätigen</button>
+    </div>
+  </mat-dialog-actions>
+</div>

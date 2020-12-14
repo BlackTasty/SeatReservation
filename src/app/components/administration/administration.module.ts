@@ -23,6 +23,10 @@ import { MovieRevenueChartComponent } from './schedule/movie-revenue-chart/movie
 import { LocationAdministrationComponent } from './location-administration/location-administration.component';
 import { DialogCreateEditLocationComponent } from './location-administration/dialog-create-edit-location/dialog-create-edit-location.component';
 import { DialogCopyScheduleComponent } from './schedule/dialogs/dialog-copy-schedule/dialog-copy-schedule.component';
+import { UserAdministrationComponent } from './user-administration/user-administration.component';
+import { DialogCreateEditUserComponent } from './user-administration/dialogs/dialog-create-edit-user/dialog-create-edit-user.component';
+import { DialogDeleteUserComponent } from './user-administration/dialogs/dialog-delete-user/dialog-delete-user.component';
+import { DialogUserErrorComponent } from './user-administration/dialogs/dialog-user-error/dialog-user-error.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,11 @@ import { DialogCopyScheduleComponent } from './schedule/dialogs/dialog-copy-sche
     MovieRevenueChartComponent,
     LocationAdministrationComponent,
     DialogCreateEditLocationComponent,
-    DialogCopyScheduleComponent
+    DialogCopyScheduleComponent,
+    UserAdministrationComponent,
+    DialogCreateEditUserComponent,
+    DialogDeleteUserComponent,
+    DialogUserErrorComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +68,10 @@ import { DialogCopyScheduleComponent } from './schedule/dialogs/dialog-copy-sche
     DialogCreateEditRoomComponent,
     DialogScheduleMovieComponent,
     DialogCreateEditLocationComponent,
-    DialogCopyScheduleComponent
+    DialogCopyScheduleComponent,
+    DialogCreateEditUserComponent,
+    DialogDeleteUserComponent,
+    DialogUserErrorComponent
   ]
 })
 export class AdministrationModule { }

@@ -8,7 +8,10 @@ export class User {
               public firstName: string,
               public lastName: string,
               public registerDate: Date,
-              public permissions: Permission[]) {
+              public permissions: Permission[],
+              public email: string,
+              public phone: string,
+              public avatar: string) {
 
   }
 }

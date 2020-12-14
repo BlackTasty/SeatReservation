@@ -1,0 +1,103 @@
+<div>
+  <h2 mat-dialog-title *ngIf="isAdd">Benutzer anlegen</h2>
+  <h2 mat-dialog-title *ngIf="!isAdd">Benutzer bearbeiten</h2>
+
+  <mat-dialog-content>
+    <mat-accordion>
+      <mat-expansion-panel style="margin-top: 8px" expanded="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Benutzerdaten
+          </mat-panel-title>
+          <mat-panel-description>
+            Daten wie Benutzername, Vor- und Nachname, etc. setzen
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <span style="display: flex;">
+          <span>
+            <div>
+              <mat-form-field>
+                <input matInput placeholder="Benutzername" name="username" [(ngModel)]="user.username" required>
+              </mat-form-field>
+            </div>
+            <span style="display: flex; flex-direction: column;">
+              <span style="display: flex; flex-direction: column;" *ngIf="isAdd">
+                <mat-form-field>
+                  <input matInput type="password" placeholder="Passwort" name="password" [(ngModel)]="password" required>
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput type="password" placeholder="Passwort wiederholen" name="passwordRepeat" [(ngModel)]="passwordRepeat" required>
+                </mat-form-field>
+              </span>
+              <span style="display: flex; flex-direction: column;" *ngIf="!isAdd">
+                <mat-form-field>
+                  <input matInput type="password" placeholder="Passwort" name="password" [(ngModel)]="password">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput type="password" placeholder="Passwort wiederholen" name="passwordRepeat" [(ngModel)]="passwordRepeat"
+                    [disabled]="!!password === false">
+                </mat-form-field>
+              </span>
+              <label *ngIf="password !== passwordRepeat" style="color: red">Passwörter stimmen nicht überein!</label>
+            </span>
+            <mat-form-field>
+              <input matInput placeholder="Vorname" name="firstName" [(ngModel)]="user.firstName">
+            </mat-form-field>
+          </span>
+          <span style="display: flex; flex-direction: column; margin-left: 32px;">
+            <span style="align-self: center;">
+              <ngx-avatar *ngIf="!!user.firstName && !!user.lastName; else usernameAvatar" [name]="user.firstName + ' ' + user.lastName" size="120" textSizeRatio="2"></ngx-avatar>
+              <ng-template #usernameAvatar>
+                <ngx-avatar [name]="user.username" size="120" textSizeRatio="2"></ngx-avatar>
+              </ng-template>
+            </span>
+            <span class="spacer"></span>
+            <mat-form-field>
+              <input matInput placeholder="Nachname" name="lastName" [(ngModel)]="user.lastName">
+            </mat-form-field>
+          </span>
+        </span>
+      </mat-expansion-panel>
+      <mat-expansion-panel style="margin-bottom: 8px">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Berechtigungen
+          </mat-panel-title>
+          <mat-panel-description>
+            Zugriff auf bestimmte Seiten zulassen oder einschränken
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div>
+          <mat-table matSort [dataSource]="permissions">
+            <ng-container matColumnDef="checked">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let permission">
+                <mat-checkbox [(ngModel)]="permission.checked"></mat-checkbox>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef>Berechtigung</mat-header-cell>
+              <mat-cell *matCellDef="let permission">
+                {{permission.name}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="description">
+              <mat-header-cell *matHeaderCellDef>Beschreibung</mat-header-cell>
+              <mat-cell *matCellDef="let permission">
+                {{permission.description}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+          </mat-table>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions-container">
+    <div class="dialog-actions-content">
+      <button mat-raised-button color="warn" (click)="onAbortClicked()">Abbrechen</button>
+      <button mat-raised-button color="accent" (click)="onConfirmClicked()" [disabled]="!allowSave()">Bestätigen</button>
+    </div>
+  </mat-dialog-actions>
+</div>

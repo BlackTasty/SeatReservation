@@ -103,7 +103,7 @@ export class AuthenticationService {
       return true;
     }
 
-    return this.hasPermissionId(6);
+    return this.permissions.length === 1 && this.hasPermissionId(7);
   }
 
   private hasPermissionId(id: number): boolean {

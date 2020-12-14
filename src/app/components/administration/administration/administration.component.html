@@ -1,4 +1,13 @@
 <mat-tab-group #tabGroup (selectedTabChange)="onTabChange($event.index)">
+  <mat-tab *ngIf="authenticationService.hasPermission(7)">
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px">account_circle</mat-icon>
+      <label>Benutzer</label>
+    </ng-template>
+    <mat-card>
+      <app-user-administration></app-user-administration>
+    </mat-card>
+  </mat-tab>
   <mat-tab *ngIf="authenticationService.hasPermission(2)">
     <ng-template mat-tab-label>
       <mat-icon style="margin: 0 8px">location_on</mat-icon>

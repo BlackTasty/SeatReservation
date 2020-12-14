@@ -11,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 import { CarouselModule } from 'ngx-owl-carousel-o';
+import { AvatarModule } from 'ngx-avatar';
 
 @NgModule({
   declarations: [],
@@ -45,7 +46,8 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     MatStepperModule,
     CarouselModule,
     MatChipsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    AvatarModule
   ],
   exports: [
     MatInputModule,
@@ -77,7 +79,8 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     MatStepperModule,
     CarouselModule,
     MatChipsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    AvatarModule
   ]
 })
 export class MaterialModule { }
