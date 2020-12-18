@@ -75,6 +75,10 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
     return this.highlightedScheduleDates.includes(date);
   }
 
+  public checkDateWithCurrent(d: Date): boolean {
+    return moment(d.toString()).isAfter(new Date());
+  }
+
   public onLocationSelected() {
     this.refreshSchedule();
   }

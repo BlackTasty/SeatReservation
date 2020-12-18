@@ -1,5 +1,6 @@
 import { ScheduleSlot } from './schedule-slot';
 import { ReservationStatus } from './reservation-status';
+import { Movie } from './movie';
 
 export class Reservation {
   constructor(public id: number,
@@ -10,7 +11,8 @@ export class Reservation {
               public bookingDate: Date,
               public userId: number,
               public email: string,
-              public isConfirmed: boolean) {
+              public isConfirmed: boolean,
+              public reservationNumber: string) {
 
               }
 }

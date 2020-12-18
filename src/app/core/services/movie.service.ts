@@ -32,6 +32,13 @@ export class MovieService {
     }));
   }
 
+  public getMovieByScheduleSlotId(scheduleSlotId: number): Observable<Movie> {
+    return this.httpClient.get(this.hostName + '/getmoviebyscheduleslotid?id=' + scheduleSlotId)
+    .pipe(map((result: Movie) => {
+      return result;
+    }));
+  }
+
   public getFeaturedMovies(): Observable<Movie[]> {
     return this.httpClient.get(this.hostName + '/getfeaturedmovies')
     .pipe(map((result: Movie[]) => {

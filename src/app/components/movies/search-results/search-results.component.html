@@ -67,8 +67,8 @@
             </label>
           </span>
           <div class="room-schedules-container">
-            <a mat-button *ngFor="let slot of movieProgram.slots" class="room-schedule-button"
-               [disabled]="slot.reservations.length == slot.room.roomPlan.seats.length"
+            <button mat-button *ngFor="let slot of movieProgram.slots" class="room-schedule-button"
+               [disabled]="slot.reservations.length == slot.room.roomPlan.seats.length || !checkDateWithCurrent(slot.start)"
                [routerLink]="'/movies/tickets/' + slot.id">
               <span class="room-schedule-button-content-container">
                 <h5 style="margin: 0px;" *ngIf="selectedLocationId == 0">{{slot.location.name}}</h5>
@@ -81,7 +81,7 @@
                 <label style="margin: -8px 0;">{{slot.room.name}}</label>
                 <label class="gray-color" style="margin-top: -8px; font-weight: bold;">{{slot.room.technology.name}}</label>
               </span>
-            </a>
+            </button>
           </div>
        </span>
       </span>

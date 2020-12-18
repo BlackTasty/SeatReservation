@@ -11,7 +11,7 @@ import { UserPermission } from 'src/app/shared/model/userPermission';
   styleUrls: ['./dialog-create-edit-user.component.scss']
 })
 export class DialogCreateEditUserComponent implements OnInit {
-  public user: User = new User(0, '', '', '', '', new Date(), [], '', '', '');
+  public user: User = new User(0, '', '', '', '', new Date(), [], '', '', '', 0, '', '', '');
   public password: string;
   public passwordRepeat: string;
   public isAdd: boolean;

@@ -18,7 +18,8 @@ export class AuthenticationService {
   private hostName;
   private permissions: Permission[] = [];
 
-  constructor(private httpClient: HttpClient, private userService: UserService,
+  constructor(private httpClient: HttpClient,
+              private userService: UserService,
               private router: Router) {
     this.hostName = host + '/user';
   }
@@ -89,6 +90,10 @@ export class AuthenticationService {
   }
 
   public hasPermission(id: number): boolean {
+    if (!this.loggedIn) {
+      return false;
+    }
+
     // If user has admin permissions, always return true
     if (this.hasPermissionId(1)) {
       return true;
@@ -130,17 +135,22 @@ export class AuthenticationService {
     }
   }
 
+  public getCurrentUser(): Observable<User> {
+    return this.userService.getById(this.getCurrentUserId());
+  }
+
   public logout(redirectToHome: boolean) {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('expireTime');
     this.loggedIn = false;
 
     if (redirectToHome) {
-      if (this.router.url.includes('/settings')) {
+      this.router.navigate(['/home']);
+      /*if (this.router.url.includes('/settings')) {
         this.router.navigate(['/home']);
       } else {
         window.location.reload();
-      }
+      }*/
     }
   }
 

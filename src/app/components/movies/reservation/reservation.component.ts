@@ -18,6 +18,7 @@ import { SeatType } from 'src/app/shared/model/seat-type';
 import { tick } from '@angular/core/src/render3';
 import { TitleService } from 'src/app/core/services/title.service';
 import { MatStepper } from '@angular/material';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-reservation',
@@ -191,10 +192,12 @@ export class ReservationComponent implements OnInit {
   private generateReservations(userId: number, email: string, reservationStatus: ReservationStatus, stepper: MatStepper) {
     this.isLoading = true;
     const reservations: Reservation[] = [];
+    const reservationDate = new Date();
+    const reservationNumber: string = moment(reservationDate).format('x');
     this.selectedSeatPositions.forEach(seatPosition => {
       reservations.push(new Reservation(0, seatPosition.id, this.selectedScheduleSlot.id,
-                                        this.selectedScheduleSlot.room.id, reservationStatus, new Date(),
-                                        userId, email, false));
+                                        this.selectedScheduleSlot.room.id, reservationStatus, reservationDate,
+                                        userId, email, false, reservationNumber));
     });
 
     this.reservationService.addReservation(reservations).subscribe(result => {

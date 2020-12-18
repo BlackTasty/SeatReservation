@@ -10,7 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HomeComponent } from './components/home/home.component';
 import { AccountComponent } from './components/account/account.component';
-import { SettingsComponent } from './components/settings/settings.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { BasicAuthInterceptor } from './core/authentication/basic-auth.interceptor';
 import { ErrorInterceptor } from './core/authentication/error.interceptor';
@@ -28,7 +27,6 @@ import { ClickableSeatComponent } from './shared/components/clickable-seat/click
     AppComponent,
     HomeComponent,
     AccountComponent,
-    SettingsComponent,
     PageNotFoundComponent,
     MovieBannerComponent,
     MovieCardComponent,

@@ -46,7 +46,7 @@
           <mat-icon class="sidebar-icon">person</mat-icon>
           <label *ngIf="isOpen">Account</label>
         </a>
-        <a mat-list-item [matTooltip]="isOpen ? '' : 'Abmelden'" (click)="authenticationService.logout()"
+        <a mat-list-item [matTooltip]="isOpen ? '' : 'Abmelden'" (click)="authenticationService.logout(true)"
           *ngIf="authenticationService.loggedIn">
           <mat-icon class="sidebar-icon" svgIcon="logout"></mat-icon>
           <label *ngIf="isOpen">Abmelden</label>

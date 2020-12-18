@@ -1,0 +1,64 @@
+<h3>Reservierungen</h3>
+<div>
+  <span>
+    <mat-expansion-panel *ngFor="let reservation of reservations" style="margin: 8px 0">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{reservation.reservationNumber}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{reservation.reservations[0].reservationStatus === 2 ? 'Reserviert' : 'Gekauft'}} am {{reservation.reservations[0].bookingDate | date:'dd.MM.yyyy - HH:mm'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div>
+        <h4>{{reservation.reservationNumber}}</h4>
+        <span style="display: flex">
+          <img style="height: 180px; width: 123px; margin-right: 16px"
+               [src]="domSanitizer.bypassSecurityTrustUrl(reservation.movie.poster)">
+          <span style="display: flex; flex-direction: column; flex: .8;">
+            <h3>Vorstellung</h3>
+            <h4 style="margin: 4px 0 4px 8px">{{reservation?.movie?.title}}</h4>
+            <label class="confirmation-label">{{reservation?.reservationData?.roomTechnology?.name}}</label>
+            <label class="confirmation-label">{{reservation?.scheduleSlot?.location?.name}}</label>
+            <label class="confirmation-label">{{reservation?.scheduleSlot?.start | date:'dd. MMMM yyyy'}}</label>
+            <label class="confirmation-label">{{reservation?.scheduleSlot?.start | date:'HH:mm'}} - {{reservation?.reservationData?.room?.name}}</label>
+          </span>
+          <span style="display: flex; flex-direction: column; flex: 1;">
+            <h3>Karten</h3>
+            <label class="confirmation-label">Karten gesamt: {{reservation?.reservations?.length}}</label>
+            <ul class="confirmation-label" style="padding-left: 24px;">
+              <li *ngFor="let seatPrice of generateTicketPrices(reservation?.reservationData?.seatPositions)">
+                {{seatPrice.amount}}x {{seatPrice.name}} - {{(seatPrice.amount * seatPrice.price) | currency:'EUR'}}
+              </li>
+            </ul>
+            <label class="confirmation-label" *ngIf="reservation?.reservationData?.roomTechnology?.extraCharge > 0">
+              Aufpreis ({{reservation?.reservationData?.roomTechnology?.name}}) pro Karte: {{reservation?.reservationData?.roomTechnology?.extraCharge | currency:'EUR'}}
+            </label>
+            <label class="confirmation-label">
+              Reihe: {{!!reservation?.reservationData?.seatPositions && reservation?.reservationData?.seatPositions?.length > 0 ? reservation?.reservationData?.seatPositions[0].row : ''}}
+            </label>
+            <label class="confirmation-label" *ngIf="reservation?.reservationData?.seatPositions?.length == 1">
+              Sitz: {{reservation?.reservationData?.seatPositions[0].column}}
+            </label>
+            <label class="confirmation-label" *ngIf="reservation?.reservationData?.seatPositions?.length > 1">
+              Sitz: {{reservation?.reservationData?.seatPositions[0].column}}-{{reservation?.reservationData?.seatPositions[reservation.reservationData.seatPositions.length - 1].column}}
+            </label>
+          </span>
+          <span style="display: flex; flex-direction: column; flex: .6;">
+            <h3>Preis</h3>
+            <h2 class="confirmation-label">
+              {{calculatePrice(reservation) | currency:'EUR'}}
+            </h2>
+          </span>
+        </span>
+
+        <span style="display: flex;">
+          <span class="spacer"></span>
+          <button mat-raised-button color="accent" (click)="onCancelReservation(reservation)"
+                  [disabled]="!reservation.canCancel" *ngIf="!isHistory">Stornieren
+          </button>
+        </span>
+      </div>
+    </mat-expansion-panel>
+  </span>
+</div>

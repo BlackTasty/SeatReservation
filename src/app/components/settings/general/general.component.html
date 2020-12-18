@@ -1,0 +1,99 @@
+<div *ngIf="!!user">
+  <div style="display: flex; flex-direction: column;" *ngIf="!isEdit; else editMode">
+    <h3>Allgemeine Daten</h3>
+    <div style="display: flex;">
+      <span style="display: flex;">
+        <span style="display: flex; flex-direction: column; margin-left: 32px;">
+          <label class="details details-lead">Benutzername</label>
+          <label class="details details-lead">E-Mail</label>
+          <label class="details details-lead">Name</label>
+          <label class="details details-lead">Tel. Nr.</label>
+          <label class="details details-lead member-since">Mitglied seit</label>
+        </span>
+        <span style="display: flex; flex-direction: column; margin-left: 32px;">
+          <label class="details">{{user.username}}</label>
+          <label class="details">{{user.email}}</label>
+          <label class="details">{{user.lastName}} {{user.firstName}}</label>
+          <label class="details">{{user.phone}}</label>
+          <label class="details member-since">{{user.registerDate | date: 'dd.MM.yyyy'}}</label>
+        </span>
+      </span>
+      <span class="spacer"></span>
+      <ngx-avatar [name]="user.username" size="120" textSizeRatio="2"></ngx-avatar>
+    </div>
+    <mat-divider style="position: relative; margin-top: 16px;"></mat-divider>
+    <h3>Adresse</h3>
+    <div style="display: flex;">
+      <span style="display: flex; flex-direction: column; margin-left: 32px;">
+        <label class="details details-lead">Straße (Hausnummer/Stiege/Tür)</label>
+        <label class="details details-lead">Postleitzahl</label>
+        <label class="details details-lead">Ort</label>
+        <label class="details details-lead">Land</label>
+      </span>
+      <span style="display: flex; flex-direction: column; margin-left: 32px;">
+        <label class="details">{{user.address}}</label>
+        <label class="details">{{user.postalCode > 0 ? user.postalCode : ''}}</label>
+        <label class="details">{{user.state}}</label>
+        <label class="details">{{user.country}}</label>
+      </span>
+      <span class="spacer"></span>
+    </div>
+  </div>
+
+  <ng-template #editMode>
+    <div style="display: flex; flex-direction: column;">
+      <h3>Allgemeine Daten</h3>
+      <div style="display: flex;">
+        <span style="display: flex;">
+          <span style="display: flex; flex-direction: column; margin-left: 32px;">
+            <mat-form-field class="details-edit">
+              <input matInput placeholder="Benutzername" [(ngModel)]="user.username" required>
+            </mat-form-field>
+            <mat-form-field class="details-edit">
+              <input matInput placeholder="E-Mail" [(ngModel)]="user.email" required type="email">
+            </mat-form-field>
+            <span style="display: flex">
+              <mat-form-field class="details-edit">
+                <input matInput placeholder="Nachname" [(ngModel)]="user.lastName" required>
+              </mat-form-field>
+              <mat-form-field class="details-edit">
+                <input matInput placeholder="Vorname" [(ngModel)]="user.firstName" required>
+              </mat-form-field>
+            </span>
+            <mat-form-field>
+              <input matInput placeholder="Tel. Nr." [(ngModel)]="user.phone" type="tel">
+            </mat-form-field>
+          </span>
+        </span>
+        <span class="spacer"></span>
+        <ngx-avatar *ngIf="!!user.firstName && !!user.lastName; else usernameAvatar" [name]="user.firstName + ' ' + user.lastName" size="120" textSizeRatio="2"></ngx-avatar>
+        <ng-template #usernameAvatar>
+          <ngx-avatar [name]="user.username" size="120" textSizeRatio="2"></ngx-avatar>
+        </ng-template>
+      </div>
+      <mat-divider style="position: relative; margin-top: 16px;"></mat-divider>
+      <h3>Adresse</h3>
+      <div style="display: flex;">
+        <span style="display: flex; flex-direction: column; margin-left: 32px; flex: .4;">
+          <mat-form-field class="details-edit">
+            <input matInput placeholder="Straße (Hausnummer/Stiege/Tür)" [(ngModel)]="user.address">
+          </mat-form-field>
+          <mat-form-field class="details-edit">
+            <input matInput placeholder="Postleitzahl" [(ngModel)]="user.postalCode" type="number">
+          </mat-form-field>
+          <mat-form-field class="details-edit">
+            <input matInput placeholder="Ort" [(ngModel)]="user.state">
+          </mat-form-field>
+          <mat-form-field class="details-edit">
+            <input matInput placeholder="Land" [(ngModel)]="user.country">
+          </mat-form-field>
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+  <span style="display: flex;">
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="onEditConfirmClick()">{{isEdit ? 'Bestätigen' : 'Bearbeiten'}}</button>
+  </span>
+</div>

@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { host } from './host';
 import { map } from 'rxjs/operators';
+import { ReservationData } from 'src/app/shared/model/reservationData';
+import { ReservationBundle } from 'src/app/shared/model/reservation-bundle';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +31,14 @@ export class ReservationService {
       }));
   }
 
+  public getReservationsForUserId(userId: number, getReservationHistory: boolean): Observable<ReservationBundle[]> {
+    return this.httpClient.get(this.hostName + '/getreservationsforuserid?id=' + userId +
+                               '&getReservationHistory=' + getReservationHistory)
+      .pipe(map((result: ReservationBundle[]) => {
+        return result;
+      }));
+  }
+
   public addReservation(reservations: Reservation[]): Observable<boolean> {
     return this.httpClient.post(this.hostName + '/addreservation', reservations)
       .pipe(map((result: boolean) => {
@@ -39,6 +49,13 @@ export class ReservationService {
   public cancelReservation(reservationId: number, userId: number, password: string): Observable<boolean> {
     return this.httpClient.get(this.hostName + '/cancelreservation?reservation=' + reservationId + '&user=' + userId)
       .pipe(map((result: boolean) => {
+        return result;
+      }));
+  }
+
+  public getReservationData(reservations: Reservation[]): Observable<ReservationData> {
+    return this.httpClient.post(this.hostName + '/getreservationdata', reservations)
+      .pipe(map((result: ReservationData) => {
         return result;
       }));
   }

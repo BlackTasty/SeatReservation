@@ -1,3 +1,29 @@
-<p>
-  settings works!
-</p>
+<mat-tab-group (selectedTabChange)="onTabChange($event.index)">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px">account_circle</mat-icon>
+      <label>Stammdaten</label>
+    </ng-template>
+    <mat-card>
+      <app-general></app-general>
+    </mat-card>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px">confirmation_number</mat-icon>
+      <label>Reservierungen</label>
+    </ng-template>
+    <mat-card>
+      <app-reservations></app-reservations>
+    </mat-card>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon style="margin: 0 8px">history</mat-icon>
+      <label>Bestellverlauf</label>
+    </ng-template>
+    <mat-card>
+      <app-reservations [isHistory]="true"></app-reservations>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>

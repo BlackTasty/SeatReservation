@@ -28,11 +28,11 @@ export class AdministrationComponent implements OnInit {
 
   }
 
-  public onTabChange(intex: number) {
+  public onTabChange(index: number) {
     let breadcrumbTitle: string;
 
 
-    switch (intex) {
+    switch (index) {
       case 0:
         breadcrumbTitle = 'Allgemein';
         break;
