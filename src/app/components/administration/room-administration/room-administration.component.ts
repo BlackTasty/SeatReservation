@@ -7,6 +7,7 @@ import { Room } from 'src/app/shared/model/room';
 import { MatDialogConfig, MatPaginator, MatSort, MatDialog, MatTableDataSource, MatSlideToggleChange } from '@angular/material';
 import { DialogScheduleMovieComponent } from '../schedule/dialogs/dialog-schedule-movie/dialog-schedule-movie.component';
 import { RoomTechnology } from 'src/app/shared/model/room-technology';
+import { RoomCreation } from 'src/app/shared/model/room-creation';
 
 @Component({
   selector: 'app-room-administration',
@@ -19,6 +20,8 @@ export class RoomAdministrationComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) moviesPaginator: MatPaginator;
   @ViewChild(MatSort) moviesSort: MatSort;
+
+  public pageIndex = 2;
 
   constructor(private roomService: RoomService,
               private locationService: LocationService,
@@ -97,18 +100,14 @@ export class RoomAdministrationComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(DialogCreateEditRoomComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      resultRoom => {
+      (resultRoom: Room) => {
         if (!!resultRoom) {
           if (!isEdit) {
-            this.roomService.addRoom(resultRoom).subscribe(result => {
+            this.roomService.addRoom(new RoomCreation(resultRoom, this.locationService.getSelectedLocation().id)).subscribe(result => {
               if (result > -1) {
-                resultRoom.Id = result;
+                resultRoom.id = result;
                 this.locationService.getSelectedLocation().rooms.push(resultRoom);
-                this.locationService.updateSelectedLocation().subscribe(locationResult => {
-                  if (!!locationResult) {
-                    this.loadRooms();
-                  }
-                });
+                this.loadRooms();
               }
             });
           } else {

@@ -77,7 +77,7 @@ export class DialogCreateEditLocationComponent implements OnInit {
     if (!!data) {
       this.isEdit = data.isEdit;
 
-      this.location = this.isEdit ? data.location : new Location(0, '', '', null, '', '', '', false, []);
+      this.location = this.isEdit ? data.location : new Location(0, '', '', null, '', '', null, false, []);
       if (this.isEdit) {
         this.selectedCountry = this.countries.find(x => x.name === this.location.country).id;
         this.assignedRooms.data = this.location.rooms;

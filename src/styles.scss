@@ -101,3 +101,17 @@ img.blur {
   -moz-column-gap: 48px;
   column-gap: 48px;
 }
+
+.upload-file-preview-container {
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  width: 350px;
+  border: 2px solid #777777;
+}
+
+.upload-file-preview {
+  object-fit: contain;
+  width: inherit;
+  height: calc(100% - 12px);
+}

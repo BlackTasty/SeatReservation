@@ -1,0 +1,109 @@
+<span class="flex-container">
+  <span style="flex: 1"></span>
+  <button mat-mini-fab class="mat-elevation-z2" color="primary" style="margin: 8px 0" (click)="loadReservations()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</span>
+<mat-table matSort [dataSource]="reservations" multiTemplateDataRows>
+  <!-- 'isOpen', 'name', 'seatCount', 'actions' -->
+  <ng-container matColumnDef="isConfirmed">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let reservation">
+      <mat-slide-toggle [(ngModel)]="reservation.isConfirmed">
+        {{reservation.isConfirmed ? 'Bestätigt' : 'Nicht bestätigt'}}
+      </mat-slide-toggle>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="date">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Res.Datum</mat-header-cell>
+    <mat-cell *matCellDef="let reservation">
+      {{reservation.reservations[0].bookingDate | date:'dd.MM.yyyy - HH:mm'}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="email">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>E-Mail</mat-header-cell>
+    <mat-cell *matCellDef="let reservation">
+      {{reservation.email}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="schedule">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Raum - Uhrzeit</mat-header-cell>
+    <mat-cell *matCellDef="let reservation">
+      {{reservation.reservationData.room.name}} - {{reservation.scheduleSlot.start | date:'dd.MM.yyyy - HH:mm'}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="status">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>Status</mat-header-cell>
+    <mat-cell *matCellDef="let reservation">
+      {{getReservationStatus(reservation.reservations[0].reservationStatus)}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="reservationNumber">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>ResNr.</mat-header-cell>
+    <mat-cell *matCellDef="let reservation">
+      {{reservation.reservationNumber}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell mat-sort-header *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let reservation">
+      <button mat-icon-button [satPopoverAnchor]="reservationDetails" (click)="toggleTooltip(reservationDetails)">
+        <mat-icon>info</mat-icon>
+      </button>
+      <button mat-icon-button (click)="onSaveChanges(reservation)" [disabled]="reservation.isConfirmed === reservation.oldConfirmedValue">
+        <mat-icon>save</mat-icon>
+      </button>
+
+      <sat-popover #reservationDetails horizontalAlign="end" verticalAlign="above">
+        <mat-card style="display: flex;" class="mat-elevation-z4">
+          <span style="display: flex">
+            <img style="height: 180px; width: 123px; margin-right: 16px"
+                 [src]="domSanitizer.bypassSecurityTrustUrl(reservation.movie.poster)">
+            <span style="display: flex; flex-direction: column; flex: .8;">
+              <h3 style="margin-top: 0;">Vorstellung</h3>
+              <h4 style="margin: 4px 0 4px 8px">{{reservation?.movie?.title}}</h4>
+              <label class="confirmation-label">{{reservation?.reservationData?.roomTechnology?.name}}</label>
+              <label class="confirmation-label">{{reservation?.scheduleSlot?.location?.name}}</label>
+              <label class="confirmation-label">{{reservation?.scheduleSlot?.start | date:'dd. MMMM yyyy'}}</label>
+              <label class="confirmation-label">{{reservation?.scheduleSlot?.start | date:'HH:mm'}} - {{reservation?.reservationData?.room?.name}}</label>
+            </span>
+            <span style="display: flex; flex-direction: column; flex: 1;">
+              <h3 style="margin-top: 0;">Karten</h3>
+              <label class="confirmation-label">Karten gesamt: {{reservation?.reservations?.length}}</label>
+              <ul class="confirmation-label" style="padding-left: 24px;">
+                <li *ngFor="let seatPrice of generateTicketPrices(reservation?.reservationData?.seatPositions)">
+                  {{seatPrice.amount}}x {{seatPrice.name}} - {{(seatPrice.amount * seatPrice.price) | currency:'EUR'}}
+                </li>
+              </ul>
+              <label class="confirmation-label" *ngIf="reservation?.reservationData?.roomTechnology?.extraCharge > 0">
+                Aufpreis ({{reservation?.reservationData?.roomTechnology?.name}}) pro Karte: {{reservation?.reservationData?.roomTechnology?.extraCharge | currency:'EUR'}}
+              </label>
+              <label class="confirmation-label">
+                Reihe: {{!!reservation?.reservationData?.seatPositions && reservation?.reservationData?.seatPositions?.length > 0 ? reservation?.reservationData?.seatPositions[0].row : ''}}
+              </label>
+              <label class="confirmation-label" *ngIf="reservation?.reservationData?.seatPositions?.length == 1">
+                Sitz: {{reservation?.reservationData?.seatPositions[0].column}}
+              </label>
+              <label class="confirmation-label" *ngIf="reservation?.reservationData?.seatPositions?.length > 1">
+                Sitz: {{reservation?.reservationData?.seatPositions[0].column}}-{{reservation?.reservationData?.seatPositions[reservation.reservationData.seatPositions.length - 1].column}}
+              </label>
+            </span>
+            <span style="display: flex; flex-direction: column; flex: .6;">
+              <h3 style="margin-top: 0;">Preis</h3>
+              <h2 class="confirmation-label">
+                {{calculatePrice(reservation) | currency:'EUR'}}
+              </h2>
+            </span>
+          </span>
+        </mat-card>
+      </sat-popover>
+    </mat-cell>
+  </ng-container>
+  <!--<ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>Aktionen</mat-header-cell>
+    <mat-cell *matCellDef="let reservation">
+    </mat-cell>
+  </ng-container>-->
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
+<span style="display: flex; align-items: center;">
+  <span class="spacer"></span>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</span>

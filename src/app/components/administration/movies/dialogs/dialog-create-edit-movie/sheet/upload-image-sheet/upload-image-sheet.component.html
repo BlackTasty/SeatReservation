@@ -1,0 +1,26 @@
+<span style="display: flex; flex-direction: column;">
+  <h3>Bild URL eingeben</h3>
+  <mat-form-field>
+    <input matInput id="urlInput" placeholder="URL" [(ngModel)]="imageUrl" (input)="onUrlChange()">
+  </mat-form-field>
+  <h2>Oder</h2>
+  <h3>Ein Bild hochladen</h3>
+  <button type="button" mat-stroked-button color="accent" (click)="onSelectImage()" stlye="margin-top: 8px;">Hochladen</button>
+  <input #upload type="file" id="upload" ng2FileSelect (change)="imageSelected(upload.files)" hidden
+    accept="image/png,image/gif,image/jpeg,image/webp,image/bmp" [(ngModel)]="imageData">
+  <h4>Vorschau</h4>
+  <span class="upload-file-preview-container">
+    <label style="align-self: center; overflow-wrap: anywhere;">
+      {{(visibleFileName?.length > 48) ?
+        (visibleFileName | slice:0:48) + '...' : visibleFileName}}</label>
+    <img *ngIf="!!imageData" [src]="imageData" class="upload-file-preview">
+    <img *ngIf="!!imageUrl" [src]="domSanitizer.bypassSecurityTrustUrl(imageUrl)" class="upload-file-preview"/>
+  </span>
+
+  <span style="display: flex; margin-top: 8px;">
+    <span class="spacer"></span>
+    <button mat-raised-button color="warn" (click)="onCancel()" style="margin-right: 8px;">Abbrechen</button>
+    <button mat-raised-button color="accent" (click)="onConfirm()">Hochladen</button>
+  </span>
+</span>
+

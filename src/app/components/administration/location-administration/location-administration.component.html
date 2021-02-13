@@ -19,7 +19,7 @@
   <ng-container matColumnDef="logo">
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let location">
-      <img [src]="domSanitizer.bypassSecurityTrustUrl(location.logo)" style="height: 40px; width: 40px; object-fit: contain;"
+      <img [src]="location.logo.dataType == 0 ? domSanitizer.bypassSecurityTrustUrl(location.logo.filePath) : location.logo.filePath" style="height: 40px; width: 40px; object-fit: contain;"
         [ngClass]="location.isShutdown ? 'archived' : ''">
     </mat-cell>
   </ng-container>

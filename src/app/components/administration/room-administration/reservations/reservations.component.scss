@@ -1,0 +1,16 @@
+.reservation-detail-container {
+  overflow: hidden;
+  display: flex;
+}
+
+mat-row.reservation-row:not(.reservation-expanded):hover {
+  background: #555555;
+}
+
+mat-row.reservation-row:not(.reservation-expanded):active {
+  background: #3f3f3f;
+}
+
+.confirmation-label {
+  margin: 2px 0 4px 8px;
+}

@@ -103,6 +103,25 @@ export class AuthenticationService {
     return this.hasPermissionId(id);
   }
 
+  public hasAnyPermission(...ids: number[]) {
+    if (!this.loggedIn) {
+      return false;
+    }
+
+    // If user has admin permissions, always return true
+    if (this.hasPermissionId(1)) {
+      return true;
+    }
+
+    ids.forEach(id => {
+      if (this.hasPermissionId(id)) {
+        return true;
+      }
+    });
+
+    return false;
+  }
+
   public isNormalUser(): boolean {
     if (!this.loggedIn) {
       return true;

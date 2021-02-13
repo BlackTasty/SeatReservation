@@ -56,4 +56,23 @@ export class AdministrationComponent implements OnInit {
 
     this.titleService.addBreadcrumb(breadcrumbTitle, '/admin');
   }
+
+  public onRoomTabChange(index: number) {
+    let breadcrumbSubTitle: string;
+
+    switch (index) {
+      case 0:
+        breadcrumbSubTitle = 'Säle';
+        break;
+      case 1:
+        breadcrumbSubTitle = 'Reservierungen';
+        break;
+    }
+
+    if (this.titleService.breadcrumbCount() > 1) {
+      this.titleService.removeBreadcrumb();
+    }
+
+    this.titleService.addBreadcrumb(breadcrumbSubTitle, '');
+  }
 }

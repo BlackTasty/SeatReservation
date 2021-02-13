@@ -1,6 +1,6 @@
 <owl-carousel-o [options]="customOptions">
   <ng-template carouselSlide *ngFor="let movie of movies">
-    <app-movie-banner [image]="domSanitizer.bypassSecurityTrustUrl(movie.banner)"
+    <app-movie-banner [image]="movie.banner.dataType == 0 ? domSanitizer.bypassSecurityTrustUrl(movie.banner.filePath) : movie.banner.filePath"
       [title]="movie.title" headline="Jetzt im Kino!" [movieId]="movie.id"></app-movie-banner>
   </ng-template>
 </owl-carousel-o>

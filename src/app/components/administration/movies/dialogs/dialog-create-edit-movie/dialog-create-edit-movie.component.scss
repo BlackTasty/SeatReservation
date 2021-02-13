@@ -1,3 +1,64 @@
 .mat-column-checked {
   flex: 0 0 35px !important;
 }
+
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 240px;
+  margin: 0 8px 4px;
+}
+
+.upload-area-container {
+  border: 2px dashed #777777;
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+}
+
+.upload-area {
+  position: relative;
+  align-self: center;
+  margin: 0 12px 12px;
+}
+
+.upload-area-landscape {
+  width: 400px;
+  height: 220px;
+}
+
+.upload-area-portrait {
+  width: 160px;
+  height: 240px;
+  position: relative;
+}
+
+.upload-area-logo {
+  width: 162px;
+  height: 162px;
+  position: relative;
+}
+
+.upload-button {
+  //margin: 0 32px;
+  width: 120px;
+  align-self: center;
+  position: absolute;
+  bottom: 16px;
+}
+
+.remove-button {
+  //margin: 0 32px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.contain {
+  width: inherit;
+  height: inherit;
+}
+
+img.contain .contain {
+  object-fit: cover;
+}

@@ -28,7 +28,7 @@ export class MovieDetailsComponent implements OnInit {
         this.movie = movie;
         titleService.addBreadcrumb(movie.title, '');
 
-        if (!!movie.trailer && movie.trailer.includes('https://www.youtube.com/watch?v=')) {
+        if (!!movie.trailer && !!movie.trailer && movie.trailer.includes('https://www.youtube.com/watch?v=')) {
           this.isYoutubeVideo = true;
           this.youtubeVideoId = movie.trailer.replace('https://www.youtube.com/watch?v=', '');
         }

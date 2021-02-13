@@ -151,7 +151,7 @@ export class DialogCreateEditRoomComponent implements OnInit {
       this.seatRows.forEach(seatRow => {
         if (this.roomPlan.columns > this.oldColumnCount) {
           seatRow.seats.push(new SeatPosition(0, this.seatTypes[0].id, this.seatTypes[0],
-            this.roomPlan.columns, seatRow.row, 0));
+            this.roomPlan.columns, seatRow.row, 0, false));
         } else {
           seatRow.seats.pop();
         }
@@ -173,7 +173,7 @@ export class DialogCreateEditRoomComponent implements OnInit {
       const seatRow = new SeatRow(row, []);
       for (let column = 1; column <= this.roomPlan.columns; column++) {
         seatRow.seats.push(new SeatPosition(0, this.seatTypes[0].id, this.seatTypes[0],
-          column, row, 0));
+          column, row, 0, false));
       }
 
       this.seatRows.push(seatRow);
@@ -185,7 +185,7 @@ export class DialogCreateEditRoomComponent implements OnInit {
 
     for (let column = 1; column <= columns; column++) {
       seatRow.seats.push(new SeatPosition(0, this.seatTypes[0].id, this.seatTypes[0],
-        column, row, 0));
+        column, row, 0, false));
     }
 
     return seatRow;

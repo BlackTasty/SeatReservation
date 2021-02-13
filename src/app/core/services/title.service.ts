@@ -9,11 +9,15 @@ export class TitleService {
   public toolbarTitle = '';
   public breadcrumbs: Breadcrumb[] = [];
 
+  constructor(private pageTitleService: Title) { }
+
   public hasBreadcrumbs(): boolean {
-    return !!this.breadcrumbs && this.breadcrumbs.length > 0;
+    return this.breadcrumbCount() > 0;
   }
 
-  constructor(private pageTitleService: Title) { }
+  public breadcrumbCount(): number {
+    return !!this.breadcrumbs ? this.breadcrumbs.length : 0;
+  }
 
   setToolbarTitle(title: string, resetBreadcrumbs: boolean): void {
     this.toolbarTitle = title;
@@ -33,7 +37,7 @@ export class TitleService {
         breadcrump.isActive = false;
       }
     }
-    this.breadcrumbs.push(new Breadcrumb(name, routerLink, true));
+    this.breadcrumbs.push(new Breadcrumb(name, routerLink, true, this.breadcrumbCount() + 1));
   }
 
   removeBreadcrumb(): void {

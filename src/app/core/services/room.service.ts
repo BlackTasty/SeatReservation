@@ -1,3 +1,4 @@
+import { RoomCreation as RoomCreation } from '../../shared/model/room-creation';
 import { Location } from './../../shared/model/location';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -54,7 +55,7 @@ export class RoomService {
     }));
   }
 
-  public addRoom(room: Room): Observable<number> {
+  public addRoom(room: RoomCreation): Observable<number> {
     return this.httpClient.post(this.hostName + '/addroom', room)
     .pipe(map((result: number) => {
       return result;

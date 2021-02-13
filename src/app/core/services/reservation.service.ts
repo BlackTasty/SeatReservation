@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { host } from './host';
 import { map } from 'rxjs/operators';
-import { ReservationData } from 'src/app/shared/model/reservationData';
+import { ReservationData } from 'src/app/shared/model/reservation-data';
 import { ReservationBundle } from 'src/app/shared/model/reservation-bundle';
 
 @Injectable({
@@ -35,6 +35,21 @@ export class ReservationService {
     return this.httpClient.get(this.hostName + '/getreservationsforuserid?id=' + userId +
                                '&getReservationHistory=' + getReservationHistory)
       .pipe(map((result: ReservationBundle[]) => {
+        return result;
+      }));
+  }
+
+  public getBundledReservations(getHistory: boolean): Observable<ReservationBundle[]> {
+    return this.httpClient.get(this.hostName + '/getbundledreservations?getHistory=' + getHistory)
+      .pipe(map((result: ReservationBundle[]) => {
+        return result;
+      }));
+  }
+
+  public setReservationConfirmedForNumber(reservationNumber: string, isConfirmed: boolean): Observable<boolean> {
+    return this.httpClient.get(this.hostName + '/setreservationconfirmedfornumber?reservationNumber=' + reservationNumber +
+                                '&isConfirmed=' + isConfirmed)
+      .pipe(map((result: boolean) => {
         return result;
       }));
   }

@@ -56,7 +56,7 @@
         {{movieProgram.movie.releaseDate | date: 'dd.MM.yyyy'}}
       </label>
       <span style="display: flex;">
-        <img [src]="domSanitizer.bypassSecurityTrustUrl(movieProgram.movie.poster)"
+        <img [src]="movieProgram.movie.poster.dataType == 0 ? domSanitizer.bypassSecurityTrustUrl(movieProgram.movie.poster.filePath) : movieProgram.movie.poster.filePath"
              style="height: 180px; width: 123px; margin-bottom: 16px;"/>
         <span class="movie-base-container">
           <span class="movie-info-container">

@@ -66,10 +66,11 @@
 
         <!-- Seat configuration -->
         <span class="seat-configuration">
+          <h3>Sitz bearbeiten</h3>
           <label>
-            Sitzreihe {{selectedSeatPosition?.row}}
+            Reihe {{!!selectedSeatPosition ? selectedSeatPosition.row : '-'}}
             <br>
-            Spalte {{selectedSeatPosition?.column}}
+            Nummer {{!!selectedSeatPosition ? selectedSeatPosition.column : '-'}}
           </label>
           <span class="spacer"></span>
           <mat-form-field *ngIf="isLoaded" style="height: 40px; width: 220px;" color="accent">

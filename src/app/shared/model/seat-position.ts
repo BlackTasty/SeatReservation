@@ -8,7 +8,8 @@ export class SeatPosition {
               public seatType: SeatType,
               public column: number,
               public row: number,
-              public rotation: number) {
+              public rotation: number,
+              public isDisabled: boolean) {
 
   }
 }

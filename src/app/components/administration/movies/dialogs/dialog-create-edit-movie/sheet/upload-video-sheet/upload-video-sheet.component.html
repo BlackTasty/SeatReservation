@@ -1,0 +1,30 @@
+<span style="display: flex; flex-direction: column;">
+  <h3>Video URL eingeben</h3>
+  <mat-form-field>
+    <input matInput placeholder="URL" [(ngModel)]="visibleFileName" required (input)="onUrlChange()">
+  </mat-form-field>
+  <h2>Oder</h2>
+  <button type="button" mat-stroked-button color="accent" (click)="onSelectVideo()" stlye="margin-top: 8px;">Ein Bild hochladen</button>
+  <input type="file" id="imageUpload" ng2FileSelect (change)="videoSelected()" hidden
+    accept="video/mp4,video/ogg" [(ngModel)]="videoData">
+  <h3>Vorschau</h3>
+  <span class="upload-file-preview-container">
+    <video *ngIf="!!videoData; else urlVideo" style="max-height: 300px; max-width: 350px;">
+      <source [src]="domSanitizer.bypassSecurityTrustUrl(videoData)">
+    </video>
+
+    <ng-container #urlVideo>
+      <video *ngIf="!videoUrl.includes('https://www.youtube.com/watch?v=')" class="upload-file-preview">
+        <source [src]="domSanitizer.bypassSecurityTrustUrl(videoUrl)">
+      </video>
+      <youtube-player *ngIf="videoUrl.includes('https://www.youtube.com/watch?v=')" [videoId]="videoUrl" class="upload-file-preview"></youtube-player>
+    </ng-container>
+  </span>
+
+  <span style="display: flex; margin-top: 8px;">
+    <span class="spacer"></span>
+    <button mat-raised-button color="warn" (click)="onCancel()" style="margin-right: 8px;">Abbrechen</button>
+    <button mat-raised-button color="accent" (click)="onConfirm()">Hochladen</button>
+  </span>
+</span>
+

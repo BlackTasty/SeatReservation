@@ -1,17 +1,25 @@
+import { DomSanitizer } from '@angular/platform-browser';
+import { FileDataType } from './../../../../../shared/model/file-data-type';
+import { FileService } from './../../../../../core/services/file.service';
 import { Observable } from 'rxjs';
 import { MovieService } from 'src/app/core/services/movie.service';
-import { UserService } from './../../../../../core/services/user.service';
 import { Genre } from './../../../../../shared/model/genre';
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { Movie } from 'src/app/shared/model/movie';
-import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatChipInputEvent, MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatChipInputEvent,
+         MatAutocomplete, MatAutocompleteSelectedEvent, MatBottomSheetRef, MatBottomSheet } from '@angular/material';
 import { CheckableGenre } from './model/checkable-genre';
 import { FormControl } from '@angular/forms';
 import { Person } from 'src/app/shared/model/person';
 import { Studio } from 'src/app/shared/model/studio';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { startWith } from 'rxjs/operators';
-import { add } from '@amcharts/amcharts4/.internal/core/utils/Array';
+import { UploadImageSheetComponent } from './sheet/upload-image-sheet/upload-image-sheet.component';
+import { UploadVideoSheetComponent } from './sheet/upload-video-sheet/upload-video-sheet.component';
+import { TransportFile } from './model/transport-file';
+import { MediaFile } from 'src/app/shared/model/media-file';
+import { Upload } from 'src/app/shared/model/upload';
+import { MediaFileType } from 'src/app/shared/model/media-file-type';
+import { FileCategory } from 'src/app/shared/model/file-category';
 
 @Component({
   selector: 'app-dialog-create-edit-movie',
@@ -44,13 +52,17 @@ export class DialogCreateEditMovieComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<DialogCreateEditMovieComponent>,
               private movieService: MovieService,
+              private fileService: FileService,
+              private bottomSheet: MatBottomSheet,
+              public domSanitizer: DomSanitizer,
               @Inject(MAT_DIALOG_DATA) data) {
     this.genres = new MatTableDataSource();
 
     if (!!data) {
       this.isEdit = data.isEdit;
 
-      this.movie = this.isEdit ? data.movie : new Movie(0, '', null, null, null, null, '', 0, new Date(), null, false, null, false, [], [], []);
+      this.movie = this.isEdit ? data.movie :
+                    new Movie(0, '', null, 0, null, 0, null, 0, null, 0, '', 0, new Date(), null, false, null, false, [], [], []);
       this.releaseDate.setValue(this.movie.releaseDate);
     }
   }
@@ -88,7 +100,12 @@ export class DialogCreateEditMovieComponent implements OnInit {
 
     this.movie.genres = genres;
     this.movie.releaseDate = this.releaseDate.value;
+
     this.dialogRef.close(this.movie);
+  }
+
+  private normalizeString(input: string): string {
+    return input.toLocaleLowerCase().replace(' ', '-');
   }
 
   public onAbortClicked(): void {
@@ -200,5 +217,92 @@ export class DialogCreateEditMovieComponent implements OnInit {
         this.people.splice(existingIndex, 1);
       }
     }
+  }
+
+  public uploadPoster() {
+    this.openUploadImageSheet(this.movie.title + '-poster').subscribe((fileId: number) => {
+      if (!!fileId) {
+        this.movie.posterId = fileId;
+      } else {
+        console.log('No data');
+      }
+    });
+  }
+
+  public removePoster() {
+    this.movie.poster = null;
+    this.movie.posterId = 0;
+  }
+
+  public uploadBanner() {
+    this.openUploadImageSheet(this.movie.title + '-banner').subscribe((fileId: any) => {
+      if (fileId instanceof Number) {
+        this.movie.bannerId = fileId.valueOf();
+      } else if (fileId instanceof String) {
+        this.fileService.uploadUrl(new Upload(null, null, fileId.toString(), MediaFileType.Image,
+                                    FileDataType.Url, FileCategory.Movie, false)).subscribe(result => {
+          this.movie.banner = result.filePath;
+        });
+      } else if (fileId instanceof FormData) {
+        this.fileService.uploadImage(fileId).subscribe(result => {
+          this.movie.banner = result.filePath;
+        });
+      } else {
+        console.log('No data');
+      }
+    });
+  }
+
+  public removeBanner() {
+    this.movie.banner = null;
+    this.movie.bannerId = 0;
+  }
+
+  public uploadLogo() {
+    this.openUploadImageSheet(this.movie.title + '-logo').subscribe((fileId: number) => {
+      if (!!fileId) {
+        this.movie.logoId = fileId;
+      } else {
+        console.log('No data');
+      }
+    });
+  }
+
+  public removeLogo() {
+    this.movie.logo = null;
+    this.movie.logoId = 0;
+  }
+
+  public uploadTrailer() {
+    this.openUploadVideoSheet(this.movie.title + '-trailer').subscribe((fileId: number) => {
+      if (!!fileId) {
+        this.movie.trailerId = fileId;
+      } else {
+        console.log('No data');
+      }
+    });
+  }
+
+  public removeTrailer() {
+    this.movie.trailer = null;
+    this.movie.trailerId = 0;
+  }
+
+  public isYoutubeVideo(url: string): boolean {
+    return !!url && url.includes('https://www.youtube.com/watch?v=');
+  }
+
+  private openUploadImageSheet(customFileName: string): Observable<any> {
+    return this.bottomSheet.open(UploadImageSheetComponent, {
+      data: { fileCategory: FileCategory.Movie,
+              customFileName }
+    }).afterDismissed();
+  }
+
+  private openUploadVideoSheet(customFileName: string): Observable<any> {
+    return this.bottomSheet.open(UploadVideoSheetComponent, {
+      data: { fileCategory: FileCategory.Movie,
+        customFileName }
+    }).afterDismissed();
   }
 }

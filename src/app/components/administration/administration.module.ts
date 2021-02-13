@@ -27,6 +27,9 @@ import { UserAdministrationComponent } from './user-administration/user-administ
 import { DialogCreateEditUserComponent } from './user-administration/dialogs/dialog-create-edit-user/dialog-create-edit-user.component';
 import { DialogDeleteUserComponent } from './user-administration/dialogs/dialog-delete-user/dialog-delete-user.component';
 import { DialogUserErrorComponent } from './user-administration/dialogs/dialog-user-error/dialog-user-error.component';
+import { ReservationsComponent } from './room-administration/reservations/reservations.component';
+import { UploadImageSheetComponent } from './movies/dialogs/dialog-create-edit-movie/sheet/upload-image-sheet/upload-image-sheet.component';
+import { UploadVideoSheetComponent } from './movies/dialogs/dialog-create-edit-movie/sheet/upload-video-sheet/upload-video-sheet.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +51,10 @@ import { DialogUserErrorComponent } from './user-administration/dialogs/dialog-u
     UserAdministrationComponent,
     DialogCreateEditUserComponent,
     DialogDeleteUserComponent,
-    DialogUserErrorComponent
+    DialogUserErrorComponent,
+    ReservationsComponent,
+    UploadImageSheetComponent,
+    UploadVideoSheetComponent
   ],
   imports: [
     CommonModule,
@@ -71,7 +77,9 @@ import { DialogUserErrorComponent } from './user-administration/dialogs/dialog-u
     DialogCopyScheduleComponent,
     DialogCreateEditUserComponent,
     DialogDeleteUserComponent,
-    DialogUserErrorComponent
+    DialogUserErrorComponent,
+    UploadImageSheetComponent,
+    UploadVideoSheetComponent
   ]
 })
 export class AdministrationModule { }

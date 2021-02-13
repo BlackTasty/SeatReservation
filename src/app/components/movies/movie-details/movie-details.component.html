@@ -2,7 +2,7 @@
   <h2 style="margin: 0;">{{movie?.title}}</h2>
   <span style="display: flex; margin: 16px 0;">
     <span style="display: flex; align-self: center;">
-      <img [src]="domSanitizer.bypassSecurityTrustUrl(movie?.poster)"
+      <img [src]="domSanitizer.bypassSecurityTrustUrl(movie.poster)"
            style="height: 320px; width: 219px;"/>
       <span style="display: flex; margin-left: 48px;">
         <span style="display: flex; flex-direction: column;">
@@ -27,7 +27,7 @@
     <!--<mat-divider></mat-divider>-->
     <span style="display: flex; flex-direction: column;" *ngIf="!!movie?.trailer && movie?.trailer.trim() !== ''">
       <iframe *ngIf="!isYoutubeVideo" [src]='domSanitizer.bypassSecurityTrustResourceUrl(movie.trailer)'
-              frameborder="0" allowfullscreen style="align-self: center;"></iframe>
+              frameborder="0" allowfullscreen style="align-self: center; width: 640px; height: 394px;"></iframe>
       <youtube-player [videoId]="youtubeVideoId" style="align-self: center;"></youtube-player>
     </span>
   </span>
